@@ -104,7 +104,7 @@ The frontend API URL is configured in:
 ```typescript
 export const environment = {
   production: false,
-  apiUrl: 'https://localhost:5001/api'
+  apiUrl: 'https://localhost:5000/api'
 };
 ```
 
