@@ -1,0 +1,61 @@
+.project-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-6);
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-section {
+  padding: var(--ds-space-6);
+  border: 1px solid rgba(229, 234, 242, 0.9);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(245, 247, 251, 0.55), rgba(255, 255, 255, 0.98));
+}
+
+.section-header {
+  margin-bottom: var(--ds-space-4);
+
+  h2 {
+    margin: 0;
+    color: var(--ds-color-text);
+    font-size: 1.15rem;
+    font-weight: var(--ds-font-weight-semibold);
+  }
+}
+
+.section-kicker {
+  margin: 0 0 var(--ds-space-2);
+  color: var(--ds-color-text-secondary);
+  font-size: 0.75rem;
+  font-weight: var(--ds-font-weight-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.form-error {
+  margin: 0 0 0.5rem;
+  color: var(--ds-color-danger);
+  font-size: 0.85rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ds-space-3);
+  margin-top: var(--ds-space-2);
+}
+
+.button-spinner {
+  margin-right: 8px;
+  --mdc-circular-progress-active-indicator-color: #ffffff;
+}
+
+@media (max-width: 599px) {
+  .form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+}

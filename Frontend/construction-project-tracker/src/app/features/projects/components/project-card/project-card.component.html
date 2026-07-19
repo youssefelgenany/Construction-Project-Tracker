@@ -1,0 +1,49 @@
+<mat-card class="project-card">
+  <mat-card-header>
+    <mat-card-title>{{ project().name }}</mat-card-title>
+    <mat-card-subtitle>{{ project().budget | currency }}</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="card-row">
+      <span class="label">Status</span>
+      <app-project-status-chip [status]="project().status" />
+    </div>
+    <div class="card-row">
+      <span class="label">Risk</span>
+      <app-risk-chip [level]="project().riskLevel" />
+    </div>
+    <div class="card-row">
+      <span class="label">Dates</span>
+      <span>{{ project().startDate | date: 'mediumDate' }} – {{ project().endDate | date: 'mediumDate' }}</span>
+    </div>
+    <div class="card-row card-row--stacked">
+      <span class="label">Reason</span>
+      <span>{{ project().reason }}</span>
+    </div>
+    <div class="progress-section">
+      <div class="progress-header">
+        <span class="label">Progress</span>
+        <span>{{ project().progressPercentage }}%</span>
+      </div>
+      <mat-progress-bar mode="determinate" [value]="project().progressPercentage"></mat-progress-bar>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button mat-button type="button" (click)="view.emit(project())">
+      <mat-icon>visibility</mat-icon>
+      View
+    </button>
+    @if (isAdmin()) {
+      <button mat-button type="button" (click)="edit.emit(project())">
+        <mat-icon>edit</mat-icon>
+        Edit
+      </button>
+      <button mat-button color="warn" type="button" (click)="delete.emit(project())">
+        <mat-icon>delete</mat-icon>
+        Delete
+      </button>
+    }
+  </mat-card-actions>
+</mat-card>

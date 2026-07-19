@@ -1,0 +1,22 @@
+<app-page-header title="Edit Engineer" subtitle="Update engineer information">
+  <a mat-button [routerLink]="engineerId() ? ['/engineers', engineerId()] : ['/engineers']">Back</a>
+</app-page-header>
+
+@if (isLoading()) {
+  <div class="loading-container">
+    <app-loading-spinner />
+  </div>
+} @else {
+  <mat-card>
+    <mat-card-content>
+      <app-engineer-form
+        [isEditMode]="true"
+        submitLabel="Update Engineer"
+        [editValue]="editValue()"
+        [isSubmitting]="isSubmitting()"
+        (formSubmit)="onSubmit($event)"
+        (cancelClick)="onCancel()"
+      />
+    </mat-card-content>
+  </mat-card>
+}

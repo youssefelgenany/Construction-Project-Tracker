@@ -1,0 +1,81 @@
+:root {
+  /* Colors */
+  --ds-color-primary: #0f2d52;
+  --ds-color-primary-hover: #0b2342;
+  --ds-color-primary-light: #eaf2fa;
+  --ds-color-background: #f5f7fb;
+  --ds-color-card: #ffffff;
+  --ds-color-border: #e5eaf2;
+  --ds-color-text: #111827;
+  --ds-color-text-secondary: #6b7280;
+  --ds-color-success: #2e7d32;
+  --ds-color-warning: #c68a00;
+  --ds-color-danger: #c62828;
+
+  /* Legacy app aliases (migration bridge) */
+  --app-primary: var(--ds-color-primary);
+  --app-background: var(--ds-color-background);
+  --app-surface: var(--ds-color-card);
+  --app-card-radius: var(--ds-radius-md);
+
+  /* Typography */
+  --ds-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ds-font-size-page-title: 1.75rem;
+  --ds-font-size-section-title: 1.25rem;
+  --ds-font-size-card-title: 1rem;
+  --ds-font-size-body: 0.9375rem;
+  --ds-font-size-caption: 0.8125rem;
+  --ds-font-weight-regular: 400;
+  --ds-font-weight-medium: 500;
+  --ds-font-weight-semibold: 600;
+  --ds-font-weight-bold: 700;
+  --ds-line-height-tight: 1.25;
+  --ds-line-height-normal: 1.5;
+  --ds-letter-spacing-tight: -0.02em;
+
+  /* Shadows */
+  --ds-shadow-sm: 0 1px 2px rgba(15, 45, 82, 0.06);
+  --ds-shadow-md: 0 4px 16px rgba(15, 45, 82, 0.08);
+  --ds-shadow-lg: 0 12px 40px rgba(15, 45, 82, 0.12);
+  --ds-shadow-nav: 0 8px 32px rgba(15, 45, 82, 0.1);
+
+  /* Radius — use --ds-radius-surface as the default for cards, toolbars, and inputs */
+  --ds-radius-sm: 8px;
+  --ds-radius-md: 12px;
+  --ds-radius-lg: 16px;
+  --ds-radius-xl: 16px;
+  --ds-radius-surface: var(--ds-radius-lg);
+  --ds-radius-pill: 999px;
+  --ds-radius-nav: 30px;
+
+  /* Spacing */
+  --ds-space-1: 0.25rem;
+  --ds-space-2: 0.5rem;
+  --ds-space-3: 0.75rem;
+  --ds-space-4: 1rem;
+  --ds-space-5: 1.25rem;
+  --ds-space-6: 1.5rem;
+  --ds-space-8: 2rem;
+  --ds-space-10: 2.5rem;
+  --ds-space-12: 3rem;
+
+  /* Layout */
+  --ds-nav-height: 4rem;
+  --ds-shell-max-width: 1440px;
+  --ds-shell-gutter: var(--ds-space-6);
+  --ds-section-gap: var(--ds-space-6);
+  --ds-control-height: 3.25rem;
+  --ds-toolbar-height: 3.25rem;
+
+  /* Motion */
+  --ds-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --ds-transition-base: 220ms cubic-bezier(0.4, 0, 0.2, 1);
+  --ds-transition-smooth: 320ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Material system overrides */
+  --mat-sys-primary: var(--ds-color-primary);
+  --mat-sys-on-primary: #ffffff;
+  --mat-sys-surface: var(--ds-color-card);
+  --mat-sys-background: var(--ds-color-background);
+  --mat-sys-outline-variant: var(--ds-color-border);
+}

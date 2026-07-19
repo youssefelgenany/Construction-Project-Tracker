@@ -1,0 +1,22 @@
+.top-performers-card {
+  border-radius: 12px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+}
+
+th.mat-mdc-header-cell {
+  font-weight: 600;
+  color: #424242;
+}
+
+.empty-cell {
+  text-align: center;
+  padding: 2rem !important;
+  color: #757575;
+}

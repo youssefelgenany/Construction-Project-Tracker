@@ -1,0 +1,66 @@
+<div class="top-navigation">
+  <nav class="nav-bar ds-animate-in" aria-label="Main navigation">
+    <a class="brand" routerLink="/dashboard" (click)="closeMobileMenu()">
+      <span class="brand-mark" aria-hidden="true">
+        <mat-icon>construction</mat-icon>
+      </span>
+      <span class="brand-copy">
+        <span class="brand-title">Construction Tracker</span>
+        <span class="brand-subtitle">Project Management</span>
+      </span>
+    </a>
+
+    @if (showDesktopNav()) {
+      <div class="nav-links" role="menubar">
+        @for (item of visibleItems(primaryNavItems); track item.route) {
+          <a
+            class="nav-link"
+            role="menuitem"
+            [routerLink]="item.route"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: item.route === '/dashboard' }"
+          >
+            <mat-icon aria-hidden="true">{{ item.icon }}</mat-icon>
+            <span>{{ item.label }}</span>
+          </a>
+        }
+      </div>
+    }
+
+    <div class="nav-actions">
+      @if (!showDesktopNav()) {
+        <button
+          class="menu-toggle"
+          type="button"
+          mat-icon-button
+          aria-label="Open navigation menu"
+          [attr.aria-expanded]="mobileMenuOpen()"
+          (click)="toggleMobileMenu()"
+        >
+          <mat-icon>{{ mobileMenuOpen() ? 'close' : 'menu' }}</mat-icon>
+        </button>
+      }
+
+      <app-notification-bell />
+      <app-user-menu />
+    </div>
+  </nav>
+
+  @if (!showDesktopNav() && mobileMenuOpen()) {
+    <div class="mobile-menu-backdrop" (click)="closeMobileMenu()" aria-hidden="true"></div>
+    <div class="mobile-menu ds-animate-in" role="dialog" aria-label="Navigation menu">
+      @for (item of visibleItems(mobileNavItems); track item.route) {
+        <a
+          class="mobile-nav-link"
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: item.route === '/dashboard' }"
+          (click)="closeMobileMenu()"
+        >
+          <mat-icon aria-hidden="true">{{ item.icon }}</mat-icon>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,102 @@
+<mat-card class="engineer-card">
+  @if (mode() === 'performance') {
+    @if (performanceEngineer(); as engineer) {
+      <mat-card-header>
+        <mat-card-title>{{ engineer.engineerName }}</mat-card-title>
+        <mat-card-subtitle>{{ engineer.position }}</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="card-row">
+          <span class="label">Performance</span>
+          <app-performance-badge [tier]="engineer.performanceTier" />
+        </div>
+
+        <div class="card-row">
+          <span class="label">Score</span>
+          <span>{{ engineer.performanceScore | number: '1.0-1' }}</span>
+        </div>
+
+        <div class="card-row">
+          <span class="label">Tasks Completed</span>
+          <span>{{ engineer.totalTasksCompleted }}</span>
+        </div>
+
+        <div class="card-row">
+          <span class="label">On-Time</span>
+          <span>{{ engineer.onTimeCompletionRate | number: '1.0-1' }}%</span>
+        </div>
+
+        <div class="card-row">
+          <span class="label">Average Delay</span>
+          <span [class.overdue-value]="engineer.averageDaysEarlyLate > 0">
+            {{ engineer.averageDaysEarlyLate | number: '1.0-1' }} days
+          </span>
+        </div>
+
+        <div class="card-row">
+          <span class="label">Completion Reports</span>
+          <span>{{ engineer.totalCompletionReportsSubmitted }}</span>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions align="end">
+        <button mat-button type="button" (click)="view.emit(engineer)">
+          <mat-icon>visibility</mat-icon>
+          View Details
+        </button>
+      </mat-card-actions>
+    }
+  } @else {
+    @if (workloadEngineer(); as engineer) {
+      <mat-card-header>
+        <mat-card-title>{{ engineer.engineerName }}</mat-card-title>
+        <mat-card-subtitle>{{ engineer.position }}</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="card-row">
+          <span class="label">Availability</span>
+          <app-workload-chip [level]="engineer.workloadLevel" [overdueTasks]="engineer.overdueTasks" />
+        </div>
+
+        <div class="card-row">
+          <span class="label">Projects</span>
+          <span>{{ engineer.totalAssignedProjects }}</span>
+        </div>
+
+        <div class="card-row">
+          <span class="label">Active Tasks</span>
+          <span>{{ engineer.activeTasks }}</span>
+        </div>
+
+        <div class="card-row">
+          <span class="label">Overdue</span>
+          <span [class.overdue-value]="engineer.overdueTasks > 0">{{ engineer.overdueTasks }}</span>
+        </div>
+
+        <div class="card-row">
+          <span class="label">Avg Progress</span>
+          <span>{{ engineer.averageProgress | number: '1.0-1' }}%</span>
+        </div>
+
+        <div class="card-row">
+          <span class="label">Email</span>
+          <span>{{ engineer.email }}</span>
+        </div>
+
+        <div class="card-row">
+          <span class="label">Account</span>
+          <app-engineer-status-chip [isActive]="engineer.isActive" />
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions align="end">
+        <button mat-button type="button" (click)="view.emit(engineer)">
+          <mat-icon>visibility</mat-icon>
+          View Details
+        </button>
+      </mat-card-actions>
+    }
+  }
+</mat-card>

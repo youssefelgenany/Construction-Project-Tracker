@@ -1,0 +1,24 @@
+:host {
+  display: block;
+}
+
+.header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+
+  button mat-icon {
+    margin-right: 0.35rem;
+  }
+}
+
+@media (max-width: 599px) {
+  .header-actions {
+    width: 100%;
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+}

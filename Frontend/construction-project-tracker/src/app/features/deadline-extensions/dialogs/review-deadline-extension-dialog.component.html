@@ -1,0 +1,58 @@
+<div class="ds-premium-dialog">
+  <header class="ds-premium-dialog__header">
+    <h2 class="ds-premium-dialog__title">
+      @if (data.mode === 'approve') {
+        Approve Extension Request
+      } @else {
+        Reject Extension Request
+      }
+    </h2>
+    <p class="ds-premium-dialog__subtitle">
+      {{ data.request.engineerName }} · {{ data.request.projectName }}
+      @if (data.request.taskTitle) {
+        · {{ data.request.taskTitle }}
+      }
+      <br />
+      {{ data.request.currentDeadline | date: 'mediumDate' }} →
+      {{ data.request.requestedDeadline | date: 'mediumDate' }}
+      (+{{ data.request.requestedExtraDays }} days)
+    </p>
+  </header>
+
+  <div class="ds-premium-dialog__content">
+    <p class="reason-block">{{ data.request.reason }}</p>
+
+    <mat-form-field appearance="outline" class="full-width ds-textarea-field">
+      <mat-label>
+        @if (data.mode === 'reject') {
+          Rejection reason
+        } @else {
+          Admin comment (optional)
+        }
+      </mat-label>
+      <textarea matInput rows="4" [formControl]="commentControl"></textarea>
+      @if (commentControl.touched && commentControl.hasError('required')) {
+        <mat-error>A rejection reason is required.</mat-error>
+      }
+    </mat-form-field>
+  </div>
+
+  <footer class="ds-premium-dialog__actions">
+    <button class="ds-button-ghost" type="button" (click)="cancel()" [disabled]="isSubmitting()">Cancel</button>
+    <button
+      mat-flat-button
+      [color]="data.mode === 'approve' ? 'primary' : 'warn'"
+      type="button"
+      (click)="confirm()"
+      [disabled]="isSubmitting()"
+    >
+      @if (isSubmitting()) {
+        Saving...
+      } @else if (data.mode === 'approve') {
+        Approve
+      } @else {
+        Reject
+      }
+    </button>
+  </footer>
+</div>

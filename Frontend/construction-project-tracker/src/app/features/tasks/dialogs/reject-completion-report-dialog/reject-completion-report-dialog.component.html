@@ -1,0 +1,38 @@
+<div class="ds-premium-dialog">
+  <header class="ds-premium-dialog__header">
+    <h2 class="ds-premium-dialog__title">Reject Completion Report</h2>
+    <p class="ds-premium-dialog__subtitle">
+      Provide feedback for <strong>{{ data.taskTitle }}</strong>. The task will return to In Progress at
+      100% progress and the engineer can submit a new report.
+    </p>
+  </header>
+
+  <div class="ds-premium-dialog__content">
+    <mat-form-field appearance="outline" class="full-width ds-textarea-field">
+      <mat-label>Rejection comment</mat-label>
+      <textarea
+        matInput
+        rows="4"
+        [formControl]="commentControl"
+        placeholder="Explain what needs to be corrected"
+      ></textarea>
+      @if (commentControl.touched && commentControl.hasError('required')) {
+        <mat-error>A rejection comment is required.</mat-error>
+      }
+      @if (commentControl.hasError('maxlength')) {
+        <mat-error>Comment must not exceed 1000 characters.</mat-error>
+      }
+    </mat-form-field>
+  </div>
+
+  <footer class="ds-premium-dialog__actions">
+    <button class="ds-button-ghost" type="button" (click)="cancel()" [disabled]="isSubmitting()">Cancel</button>
+    <button mat-flat-button color="warn" type="button" (click)="reject()" [disabled]="isSubmitting()">
+      @if (isSubmitting()) {
+        Rejecting...
+      } @else {
+        Reject Report
+      }
+    </button>
+  </footer>
+</div>

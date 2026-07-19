@@ -1,0 +1,47 @@
+@mixin ds-hover-lift {
+  transition:
+    transform var(--ds-transition-base),
+    box-shadow var(--ds-transition-base);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: var(--ds-shadow-md);
+  }
+}
+
+@mixin ds-hover-fade {
+  transition:
+    background-color var(--ds-transition-fast),
+    color var(--ds-transition-fast),
+    opacity var(--ds-transition-fast);
+}
+
+.ds-hover-lift {
+  @include ds-hover-lift;
+}
+
+.ds-hover-fade {
+  @include ds-hover-fade;
+}
+
+@keyframes ds-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ds-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ds-animate-in {
+  animation: ds-fade-in var(--ds-transition-smooth) both;
+}

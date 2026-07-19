@@ -1,0 +1,34 @@
+app-loading-spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ds-loading-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-3);
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-body);
+}
+
+.ds-loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(245, 247, 251, 0.72);
+  backdrop-filter: blur(4px);
+}
+
+.mat-mdc-progress-spinner {
+  --mdc-circular-progress-active-indicator-color: var(--ds-color-primary);
+}
+
+.mat-mdc-progress-bar {
+  --mdc-linear-progress-active-indicator-color: var(--ds-color-primary);
+  --mdc-linear-progress-track-color: var(--ds-color-border);
+  border-radius: var(--ds-radius-pill);
+}

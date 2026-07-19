@@ -1,0 +1,32 @@
+:host {
+  display: inline-flex;
+}
+
+mat-chip {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  min-height: 24px;
+  padding: 0 10px;
+  border-radius: var(--ds-radius-pill) !important;
+}
+
+.capacity-available {
+  --mdc-chip-label-text-color: #1b5e20;
+  background-color: #e8f5e9 !important;
+}
+
+.capacity-balanced {
+  --mdc-chip-label-text-color: #0f2d52;
+  background-color: #eaf2fa !important;
+}
+
+.capacity-busy {
+  --mdc-chip-label-text-color: #e65100;
+  background-color: #fff3e0 !important;
+}
+
+.capacity-overloaded {
+  --mdc-chip-label-text-color: #b71c1c;
+  background-color: #ffebee !important;
+}

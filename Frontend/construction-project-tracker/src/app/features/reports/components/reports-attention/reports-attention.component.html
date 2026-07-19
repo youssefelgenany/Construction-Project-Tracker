@@ -1,0 +1,85 @@
+<section class="attention-section">
+  <div class="section-heading">
+    <p class="section-kicker">Focus</p>
+    <h2>Projects Requiring Attention</h2>
+    <p>At-risk and critical projects that need leadership follow-up.</p>
+  </div>
+
+  <div class="table-shell">
+    <div class="table-shell-header">
+      <div>
+        <h3>Attention queue</h3>
+        <p>Open a project to review risk drivers and overdue work.</p>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <div class="section-loading">
+        <app-loading-spinner />
+      </div>
+    } @else {
+      <div class="table-wrapper">
+        <table mat-table [dataSource]="projects()">
+          <ng-container matColumnDef="projectName">
+            <th mat-header-cell *matHeaderCellDef>Project</th>
+            <td mat-cell *matCellDef="let row">{{ row.projectName }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="riskLevel">
+            <th mat-header-cell *matHeaderCellDef>Risk</th>
+            <td mat-cell *matCellDef="let row">
+              <app-risk-chip [level]="row.riskLevel" />
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="completionPercent">
+            <th mat-header-cell *matHeaderCellDef>Completion</th>
+            <td mat-cell *matCellDef="let row">{{ row.completionPercent | number: '1.0-0' }}%</td>
+          </ng-container>
+
+          <ng-container matColumnDef="overdueTasks">
+            <th mat-header-cell *matHeaderCellDef>Overdue</th>
+            <td mat-cell *matCellDef="let row">{{ row.overdueTasks }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="engineers">
+            <th mat-header-cell *matHeaderCellDef>Engineers</th>
+            <td mat-cell *matCellDef="let row">
+              {{ row.assignedEngineers?.length ? row.assignedEngineers.join(', ') : '—' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="reason">
+            <th mat-header-cell *matHeaderCellDef>Reason</th>
+            <td mat-cell *matCellDef="let row" class="reason-cell">{{ row.reason }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="align-end">Actions</th>
+            <td mat-cell *matCellDef="let row" class="ds-actions-row">
+              <button
+                mat-icon-button
+                type="button"
+                class="ds-action-button"
+                aria-label="View project"
+                matTooltip="View project"
+                (click)="viewProject.emit(row.projectId)"
+              >
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell empty-cell" [attr.colspan]="displayedColumns.length">
+              No projects currently require attention for these filters.
+            </td>
+          </tr>
+        </table>
+      </div>
+    }
+  </div>
+</section>

@@ -1,0 +1,114 @@
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--ds-section-gap);
+}
+
+.details-card {
+  height: 100%;
+
+  mat-card-header {
+    padding-bottom: var(--ds-space-3);
+  }
+}
+
+.info-list {
+  margin: 0;
+  display: grid;
+  gap: var(--ds-space-4);
+
+  div {
+    padding-bottom: var(--ds-space-4);
+    border-bottom: 1px solid rgba(229, 234, 242, 0.8);
+  }
+
+  dt {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--ds-color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.35rem;
+  }
+
+  dd {
+    margin: 0;
+    color: var(--ds-color-text);
+    line-height: 1.65;
+  }
+}
+
+.progress-row {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-3);
+
+  mat-progress-bar {
+    flex: 1;
+    max-width: 240px;
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--ds-space-4);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ds-space-3);
+  padding: var(--ds-space-5) var(--ds-space-4);
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-surface);
+  background: linear-gradient(180deg, rgba(245, 247, 251, 0.75), rgba(255, 255, 255, 0.98));
+  text-align: center;
+}
+
+.stat-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--ds-radius-surface);
+  background: var(--ds-color-primary-light);
+  color: var(--ds-color-primary);
+
+  mat-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+}
+
+.stat-value {
+  font-size: clamp(1.75rem, 2vw, 2.125rem);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--ds-color-text);
+}
+
+.stat-label {
+  font-size: 0.8125rem;
+  font-weight: var(--ds-font-weight-medium);
+  color: var(--ds-color-text-secondary);
+  line-height: 1.4;
+}
+
+@media (max-width: 959px) {
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}

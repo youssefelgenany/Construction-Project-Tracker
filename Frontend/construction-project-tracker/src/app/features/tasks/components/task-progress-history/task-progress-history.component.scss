@@ -1,0 +1,76 @@
+.history-loading {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  padding-left: 0.5rem;
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 0.75rem 1rem;
+  position: relative;
+  padding-bottom: 1.25rem;
+}
+
+.timeline-item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 0.95rem;
+  top: 1.75rem;
+  bottom: 0;
+  width: 2px;
+  background: #e0e0e0;
+}
+
+.timeline-marker {
+  display: flex;
+  justify-content: center;
+  padding-top: 0.85rem;
+  color: #1976d2;
+  z-index: 1;
+
+  mat-icon {
+    font-size: 1.1rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    background: #fff;
+  }
+}
+
+.log-card {
+  border: 1px solid #e0e0e0;
+  box-shadow: none;
+
+  mat-card-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #1565c0;
+  }
+
+  mat-card-subtitle {
+    margin-top: 0.15rem;
+    color: #757575;
+  }
+
+  p {
+    margin: 0;
+    color: #424242;
+    line-height: 1.55;
+    white-space: pre-wrap;
+  }
+}
+
+@media (max-width: 599px) {
+  .timeline-item {
+    grid-template-columns: 1.5rem 1fr;
+    gap: 0.5rem 0.75rem;
+  }
+}

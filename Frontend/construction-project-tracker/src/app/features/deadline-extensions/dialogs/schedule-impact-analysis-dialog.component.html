@@ -1,0 +1,190 @@
+<div class="ds-premium-dialog schedule-impact">
+  <header class="ds-premium-dialog__header">
+    <p class="ds-premium-dialog__eyebrow">Dependency cascade</p>
+    <h2 class="ds-premium-dialog__title">Schedule Impact Analysis</h2>
+    <p class="ds-premium-dialog__subtitle">
+      @if (hasNoImpact()) {
+        Review the simulated schedule before confirming this extension.
+      } @else if (analysis.requiresProjectExtension && analysis.affectedTaskCount === 0) {
+        This extension pushes the project’s latest task due date past the current project end.
+        Confirm the project deadline change below.
+      } @else {
+        This deadline extension conflicts with dependent tasks. The following tasks would need to be
+        rescheduled to keep the dependency chain valid.
+      }
+    </p>
+  </header>
+
+  <div class="ds-premium-dialog__content">
+    <section class="impact-source">
+      <div class="impact-source__icon" aria-hidden="true">
+        <mat-icon>timeline</mat-icon>
+      </div>
+      <div>
+        <p class="impact-source__label">Source task</p>
+        <p class="impact-source__title">{{ analysis.sourceTaskTitle }}</p>
+        <p class="impact-source__dates">
+          {{ analysis.currentDueDate | date: 'MMM d, y' }}
+          <mat-icon class="impact-source__arrow">arrow_forward</mat-icon>
+          {{ analysis.proposedDueDate | date: 'MMM d, y' }}
+        </p>
+      </div>
+    </section>
+
+    <section class="impact-summary" aria-label="Impact summary">
+      <article class="impact-card impact-card--tasks">
+        <div class="impact-card__icon">
+          <mat-icon>account_tree</mat-icon>
+        </div>
+        <p class="impact-card__label">Affected Tasks</p>
+        <p class="impact-card__value">{{ analysis.affectedTaskCount }}</p>
+      </article>
+
+      <article class="impact-card impact-card--shift">
+        <div class="impact-card__icon">
+          <mat-icon>swap_horiz</mat-icon>
+        </div>
+        <p class="impact-card__label">Total Shift</p>
+        <p class="impact-card__value">+{{ analysis.totalShiftWorkingDays }} working days</p>
+      </article>
+
+      <article class="impact-card impact-card--current">
+        <div class="impact-card__icon">
+          <mat-icon>event</mat-icon>
+        </div>
+        <p class="impact-card__label">Project End</p>
+        <p class="impact-card__value">{{ analysis.currentProjectEnd | date: 'MMM d y' }}</p>
+      </article>
+
+      @if (analysis.requiresProjectExtension) {
+        <article class="impact-card impact-card--alert">
+          <div class="impact-card__icon">
+            <mat-icon>warning</mat-icon>
+          </div>
+          <p class="impact-card__label">New Required Project End</p>
+          <p class="impact-card__value">{{ analysis.newRequiredProjectEnd | date: 'MMM d y' }}</p>
+        </article>
+      } @else {
+        <article class="impact-card impact-card--ok">
+          <div class="impact-card__icon">
+            <mat-icon>event_available</mat-icon>
+          </div>
+          <p class="impact-card__label">Status</p>
+          <p class="impact-card__value">No Change</p>
+        </article>
+      }
+    </section>
+
+    @if (hasNoImpact()) {
+      <section class="impact-success" role="status">
+        <div class="impact-success__icon" aria-hidden="true">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <div>
+          <h3>No dependency conflicts detected.</h3>
+          <p>This extension only affects the selected task.</p>
+          <p>No project schedule changes are required.</p>
+        </div>
+      </section>
+    }
+
+    @if (analysis.affectedTasks.length > 0) {
+      <section class="impact-table-wrap">
+        <div class="impact-table-head">
+          <mat-icon>table_chart</mat-icon>
+          <h3>Tasks to reschedule</h3>
+        </div>
+        <div class="impact-table-scroll">
+          <table class="impact-table">
+            <thead>
+              <tr>
+                <th>Task</th>
+                <th>Current Start</th>
+                <th>Current Due</th>
+                <th>New Start</th>
+                <th>New Due</th>
+                <th>Days Shifted</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (task of analysis.affectedTasks; track task.taskId) {
+                <tr>
+                  <td>
+                    <div class="task-cell">
+                      <span class="task-cell__timeline" aria-hidden="true">
+                        <mat-icon>subdirectory_arrow_right</mat-icon>
+                      </span>
+                      <div>
+                        <p class="task-cell__title">{{ task.title }}</p>
+                        @if (task.engineerName) {
+                          <p class="task-cell__meta">{{ task.engineerName }}</p>
+                        }
+                      </div>
+                    </div>
+                  </td>
+                  <td>{{ task.currentStart | date: 'MMM d, y' }}</td>
+                  <td>{{ task.currentDue | date: 'MMM d, y' }}</td>
+                  <td class="col-new">{{ task.newStart | date: 'MMM d, y' }}</td>
+                  <td class="col-new">{{ task.newDue | date: 'MMM d, y' }}</td>
+                  <td>
+                    <span class="shift-badge" [ngClass]="shiftTone(task.daysShifted)">
+                      +{{ task.daysShifted }}
+                    </span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
+
+    @if (analysis.requiresProjectExtension) {
+      <section class="project-confirm">
+        <div class="project-confirm__icon" aria-hidden="true">
+          <mat-icon>calendar_month</mat-icon>
+        </div>
+        <div class="project-confirm__body">
+          <h3>Project deadline extension required</h3>
+          <p>
+            After resolving the full schedule, the latest task due date becomes
+            <strong>{{ analysis.latestTaskDueDate | date: 'MMM d y' }}</strong>, which is after the
+            current project end for <strong>{{ analysis.projectName }}</strong>.
+          </p>
+          <dl class="project-confirm__dates">
+            <div>
+              <dt>Current Project End</dt>
+              <dd>{{ analysis.currentProjectEnd | date: 'MMM d y' }}</dd>
+            </div>
+            <div>
+              <dt>New Project End</dt>
+              <dd>{{ analysis.newRequiredProjectEnd | date: 'MMM d y' }}</dd>
+            </div>
+          </dl>
+          <label class="project-confirm__check">
+            <mat-checkbox
+              [ngModel]="confirmProjectExtension()"
+              (ngModelChange)="confirmProjectExtension.set($event)"
+            >
+              I confirm extending the project deadline to
+              {{ analysis.newRequiredProjectEnd | date: 'MMM d y' }}
+            </mat-checkbox>
+          </label>
+        </div>
+      </section>
+    }
+  </div>
+
+  <footer class="ds-premium-dialog__actions">
+    <button class="ds-button-ghost" type="button" (click)="cancel()">Cancel Extension</button>
+    <button
+      mat-flat-button
+      color="primary"
+      type="button"
+      (click)="apply()"
+      [disabled]="analysis.requiresProjectExtension && !confirmProjectExtension()"
+    >
+      Apply Changes
+    </button>
+  </footer>
+</div>

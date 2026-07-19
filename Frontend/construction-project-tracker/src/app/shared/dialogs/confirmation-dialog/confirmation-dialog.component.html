@@ -1,0 +1,18 @@
+<div class="ds-premium-dialog">
+  <header class="ds-premium-dialog__header">
+    <h2 class="ds-premium-dialog__title">{{ data.title }}</h2>
+  </header>
+
+  <div class="ds-premium-dialog__content">
+    <p class="confirmation-message">{{ data.message }}</p>
+  </div>
+
+  <footer class="ds-premium-dialog__actions">
+    <button class="ds-button-ghost" type="button" (click)="cancel()">
+      {{ data.cancelText || 'Cancel' }}
+    </button>
+    <button mat-flat-button color="primary" type="button" (click)="confirm()">
+      {{ data.confirmText || 'Confirm' }}
+    </button>
+  </footer>
+</div>

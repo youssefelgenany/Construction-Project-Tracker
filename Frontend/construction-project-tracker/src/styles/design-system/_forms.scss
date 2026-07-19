@@ -1,0 +1,209 @@
+.mat-mdc-form-field {
+  font-family: var(--ds-font-family);
+  width: 100%;
+}
+
+.mat-mdc-text-field-wrapper {
+  border-radius: var(--ds-radius-lg) !important;
+}
+
+.mdc-text-field--outlined .mdc-notched-outline__leading,
+.mdc-text-field--outlined .mdc-notched-outline__notch,
+.mdc-text-field--outlined .mdc-notched-outline__trailing {
+  border-color: var(--ds-color-border) !important;
+}
+
+.mdc-text-field--outlined:hover .mdc-notched-outline__leading,
+.mdc-text-field--outlined:hover .mdc-notched-outline__notch,
+.mdc-text-field--outlined:hover .mdc-notched-outline__trailing {
+  border-color: var(--ds-color-primary) !important;
+}
+
+.mat-mdc-form-field-focus-overlay {
+  background: transparent;
+}
+
+.mat-mdc-select-value,
+.mat-mdc-input-element,
+.mat-mdc-floating-label {
+  font-family: var(--ds-font-family) !important;
+}
+
+.mat-mdc-form-field-subscript-wrapper {
+  font-family: var(--ds-font-family);
+}
+
+.ds-premium-form {
+  display: grid;
+  gap: 24px;
+}
+
+.ds-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.ds-field-span-2 {
+  grid-column: 1 / -1;
+}
+
+.ds-premium-dialog .mat-mdc-form-field {
+  --mdc-outlined-text-field-container-shape: 16px;
+  --mdc-outlined-text-field-outline-color: #e2e8f0;
+  --mdc-outlined-text-field-hover-outline-color: #c3cedb;
+  --mdc-outlined-text-field-focus-outline-color: #2f5bd2;
+  --mdc-outlined-text-field-input-text-color: var(--ds-color-text);
+  --mdc-outlined-text-field-label-text-color: var(--ds-color-text-secondary);
+  --mdc-outlined-text-field-hover-label-text-color: var(--ds-color-text);
+  --mdc-outlined-text-field-focus-label-text-color: #2f5bd2;
+  --mdc-outlined-text-field-caret-color: #2f5bd2;
+  --mat-sys-primary: #2f5bd2;
+}
+
+.ds-premium-dialog .mat-mdc-text-field-wrapper {
+  min-height: 56px;
+  border-radius: 16px !important;
+  background: #fafbfd;
+  transition:
+    box-shadow var(--ds-transition-fast),
+    background-color var(--ds-transition-fast),
+    border-color var(--ds-transition-fast);
+}
+
+.ds-premium-dialog .mat-mdc-form-field:hover .mat-mdc-text-field-wrapper {
+  background: #f7f9fc;
+}
+
+.ds-premium-dialog .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper {
+  box-shadow: 0 0 0 2px rgba(47, 91, 210, 0.16);
+}
+
+.ds-premium-dialog .mat-mdc-form-field-error {
+  color: var(--ds-color-danger);
+}
+
+.ds-premium-dialog .mat-mdc-form-field-invalid {
+  --mdc-outlined-text-field-outline-color: rgba(198, 40, 40, 0.85);
+  --mdc-outlined-text-field-hover-outline-color: rgba(198, 40, 40, 1);
+  --mdc-outlined-text-field-focus-outline-color: rgba(198, 40, 40, 1);
+}
+
+.ds-premium-dialog .mat-mdc-form-field-invalid .mat-mdc-text-field-wrapper {
+  box-shadow: 0 0 0 1px rgba(198, 40, 40, 0.16);
+}
+
+.ds-premium-dialog .mat-mdc-form-field-hint,
+.ds-premium-dialog .mat-mdc-form-field-error {
+  font-size: 0.8rem;
+}
+
+.ds-premium-dialog .mat-mdc-select-arrow {
+  color: var(--ds-color-text-secondary);
+}
+
+.ds-premium-dialog .mat-mdc-form-field-icon-suffix {
+  color: #2f5bd2;
+}
+
+.ds-premium-dialog .mat-mdc-select-value,
+.ds-premium-dialog .mat-mdc-input-element,
+.ds-premium-dialog textarea.mat-mdc-input-element {
+  color: var(--ds-color-text) !important;
+}
+
+.ds-premium-dialog textarea.mat-mdc-input-element {
+  resize: none;
+}
+
+.ds-textarea-field .mat-mdc-form-field-infix {
+  min-height: 140px;
+  align-content: flex-start;
+}
+
+.ds-textarea-field textarea.mat-mdc-input-element {
+  min-height: 108px !important;
+}
+
+.mat-mdc-select-panel {
+  border-radius: 20px !important;
+  box-shadow: 0 16px 42px rgba(15, 45, 82, 0.18) !important;
+}
+
+.mat-mdc-option {
+  min-height: 48px !important;
+}
+
+.ds-info-card {
+  display: grid;
+  gap: 16px;
+  padding: 20px 22px;
+  border: 1px solid rgba(138, 180, 255, 0.35);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(237, 245, 255, 0.92), rgba(248, 251, 255, 0.98));
+}
+
+.ds-info-card__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.ds-info-card__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(47, 91, 210, 0.12);
+  color: #2f5bd2;
+  flex: 0 0 auto;
+}
+
+.ds-info-card__title {
+  margin: 0;
+  color: var(--ds-color-text);
+  font-size: 1rem;
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+.ds-info-card__subtitle {
+  margin: 4px 0 0;
+  color: var(--ds-color-text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.ds-info-card__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.ds-info-card__label {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--ds-color-text-secondary);
+  font-size: 0.75rem;
+  font-weight: var(--ds-font-weight-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.ds-info-card__value {
+  color: var(--ds-color-text);
+  font-weight: var(--ds-font-weight-semibold);
+}
+
+@media (max-width: 899px) {
+  .ds-info-card__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  .ds-form-grid {
+    grid-template-columns: 1fr;
+  }
+}

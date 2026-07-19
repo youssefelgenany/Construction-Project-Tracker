@@ -1,0 +1,66 @@
+<section class="summary-section">
+  <div class="section-heading">
+    <p class="section-kicker">Overview</p>
+    <h2>Executive Summary</h2>
+    <p>Company-wide delivery health and capacity signals.</p>
+  </div>
+
+  @if (loading()) {
+    <div class="kpi-grid skeleton-grid">
+      @for (i of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]; track i) {
+        <article class="kpi-card skeleton-card"></article>
+      }
+    </div>
+  } @else {
+    <div class="kpi-grid">
+      <article class="kpi-card">
+        <strong>{{ summary().totalProjects }}</strong>
+        <span>Total Projects</span>
+      </article>
+      <article class="kpi-card tone-success">
+        <strong>{{ summary().healthyProjects }}</strong>
+        <span>Healthy Projects</span>
+      </article>
+      <article class="kpi-card tone-warning">
+        <strong>{{ summary().atRiskProjects }}</strong>
+        <span>At Risk Projects</span>
+      </article>
+      <article class="kpi-card tone-danger">
+        <strong>{{ summary().delayedProjects }}</strong>
+        <span>Delayed Projects</span>
+      </article>
+      <article class="kpi-card">
+        <strong>{{ summary().totalEngineers }}</strong>
+        <span>Total Engineers</span>
+      </article>
+      <article class="kpi-card">
+        <strong>{{ summary().activeEngineers }}</strong>
+        <span>Active Engineers</span>
+      </article>
+      <article class="kpi-card">
+        <strong>{{ summary().totalTasks }}</strong>
+        <span>Total Tasks</span>
+      </article>
+      <article class="kpi-card tone-success">
+        <strong>{{ summary().completedTasks }}</strong>
+        <span>Completed Tasks</span>
+      </article>
+      <article class="kpi-card tone-danger">
+        <strong>{{ summary().overdueTasks }}</strong>
+        <span>Overdue Tasks</span>
+      </article>
+      <article class="kpi-card">
+        <strong>{{ summary().averageProjectCompletion | number: '1.0-1' }}%</strong>
+        <span>Avg Project Completion</span>
+      </article>
+      <article class="kpi-card">
+        <strong>{{ summary().onTimeCompletionRate | number: '1.0-1' }}%</strong>
+        <span>On-Time Completion Rate</span>
+      </article>
+      <article class="kpi-card">
+        <strong>{{ summary().averageEngineerWorkload | number: '1.0-1' }}%</strong>
+        <span>Avg Engineer Workload</span>
+      </article>
+    </div>
+  }
+</section>

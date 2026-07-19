@@ -1,0 +1,38 @@
+.mat-mdc-card {
+  border-radius: var(--ds-radius-surface) !important;
+  border: 1px solid var(--ds-color-border);
+  background: var(--ds-color-card);
+  box-shadow: var(--ds-shadow-sm) !important;
+  transition:
+    box-shadow var(--ds-transition-base),
+    transform var(--ds-transition-base);
+
+  &:hover {
+    box-shadow: var(--ds-shadow-md) !important;
+  }
+}
+
+.mat-mdc-card-title {
+  font-family: var(--ds-font-family) !important;
+  font-size: var(--ds-font-size-card-title) !important;
+  font-weight: var(--ds-font-weight-semibold) !important;
+  color: var(--ds-color-text) !important;
+}
+
+.mat-mdc-card-subtitle {
+  font-family: var(--ds-font-family) !important;
+  color: var(--ds-color-text-secondary) !important;
+}
+
+.ds-card {
+  padding: var(--ds-space-6);
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-surface);
+  background: var(--ds-color-card);
+  box-shadow: var(--ds-shadow-sm);
+}
+
+.ds-card-elevated {
+  @extend .ds-card;
+  box-shadow: var(--ds-shadow-md);
+}

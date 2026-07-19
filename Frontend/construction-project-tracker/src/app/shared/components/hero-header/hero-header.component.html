@@ -1,0 +1,19 @@
+<section class="hero-header">
+  <div class="hero-pattern" aria-hidden="true"></div>
+
+  <div class="hero-copy">
+    @if (eyebrow()) {
+      <span class="hero-eyebrow">{{ eyebrow() }}</span>
+    }
+
+    <h1 class="hero-title">{{ title() }}</h1>
+
+    @if (description()) {
+      <p class="hero-description">{{ description() }}</p>
+    }
+  </div>
+
+  <div class="hero-actions">
+    <ng-content />
+  </div>
+</section>

@@ -1,0 +1,541 @@
+@if (isLoading()) {
+  <div class="loading-container">
+    <app-loading-spinner />
+  </div>
+} @else {
+  @if (engineer(); as details) {
+    <app-back-link link="/engineers" label="Back to Engineers" />
+
+    <app-page-header
+      [title]="details.fullName"
+      [subtitle]="details.position"
+      eyebrow="Engineer Profile"
+    >
+      <div class="hero-identity">
+        <span class="hero-avatar" aria-hidden="true">{{ getInitials(details.fullName) }}</span>
+        <div class="hero-meta">
+          <span>{{ details.email }}</span>
+          <app-engineer-status-chip [isActive]="details.isActive" />
+        </div>
+      </div>
+    </app-page-header>
+
+    @if (performance(); as performanceDetails) {
+      <section class="summary-grid">
+        <article class="summary-card">
+          <strong class="summary-value">{{ performanceDetails.summary.performanceScore | number: '1.0-0' }}</strong>
+          <span class="summary-label">Performance Score</span>
+          <span class="summary-meta">Overall delivery rating</span>
+        </article>
+        <article class="summary-card">
+          <strong class="summary-value">{{ performanceDetails.summary.currentActiveTasks }}</strong>
+          <span class="summary-label">Active Tasks</span>
+          <span class="summary-meta">Currently assigned work</span>
+        </article>
+        <article class="summary-card">
+          <strong class="summary-value">{{ performanceDetails.summary.totalTasksCompleted }}</strong>
+          <span class="summary-label">Completed Tasks</span>
+          <span class="summary-meta">Closed delivery items</span>
+        </article>
+        <article class="summary-card">
+          <strong class="summary-value">{{ performanceDetails.summary.onTimeCompletionRate | number: '1.0-0' }}%</strong>
+          <span class="summary-label">On-Time Rate</span>
+          <span class="summary-meta">Schedule reliability</span>
+        </article>
+        <article class="summary-card">
+          <strong class="summary-value">{{ details.assignedProjectsCount }}</strong>
+          <span class="summary-label">Projects</span>
+          <span class="summary-meta">Assigned project load</span>
+        </article>
+      </section>
+    }
+
+    <mat-tab-group class="engineer-tabs" animationDuration="200ms" [(selectedIndex)]="selectedTabIndex">
+      <mat-tab label="Overview">
+        <div class="tab-content">
+          <div class="overview-grid">
+            <mat-card class="section-card">
+              <mat-card-header>
+                <mat-card-title>Profile</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <dl class="info-list">
+                  <div>
+                    <dt>Email</dt>
+                    <dd>{{ details.email }}</dd>
+                  </div>
+                  <div>
+                    <dt>Phone</dt>
+                    <dd>{{ details.phoneNumber }}</dd>
+                  </div>
+                  <div>
+                    <dt>Position</dt>
+                    <dd>{{ details.position }}</dd>
+                  </div>
+                  <div>
+                    <dt>Hire Date</dt>
+                    <dd>{{ details.hireDate | date: 'fullDate' }}</dd>
+                  </div>
+                  <div>
+                    <dt>Account</dt>
+                    <dd><app-engineer-status-chip [isActive]="details.isActive" /></dd>
+                  </div>
+                </dl>
+              </mat-card-content>
+            </mat-card>
+
+            @if (performance(); as performanceDetails) {
+              <mat-card class="section-card">
+                <mat-card-header>
+                  <mat-card-title>Performance Snapshot</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="score-row">
+                    <span class="score-value">{{ performanceDetails.summary.performanceScore | number: '1.0-1' }}</span>
+                    <app-performance-badge [tier]="performanceDetails.summary.performanceTier" />
+                  </div>
+                  <div class="mini-metrics">
+                    <div>
+                      <span class="metric-label">Completion Rate</span>
+                      <strong>{{ performanceDetails.summary.completionRate | number: '1.0-1' }}%</strong>
+                    </div>
+                    <div>
+                      <span class="metric-label">Late Rate</span>
+                      <strong>{{ performanceDetails.summary.lateRate | number: '1.0-1' }}%</strong>
+                    </div>
+                    <div>
+                      <span class="metric-label">Reports</span>
+                      <strong>{{ performanceDetails.summary.totalCompletionReportsSubmitted }}</strong>
+                    </div>
+                    <div>
+                      <span class="metric-label">Avg Updates / Task</span>
+                      <strong>{{ performanceDetails.summary.averageProgressUpdatesPerTask | number: '1.0-1' }}</strong>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            }
+          </div>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Projects">
+        <div class="tab-content">
+          @if (assignedProjects().length === 0) {
+            <app-empty-state
+              icon="business"
+              title="No assigned projects"
+              message="This engineer is not assigned to any projects yet."
+            />
+          } @else {
+            <div class="table-shell">
+              <table mat-table [dataSource]="assignedProjects()">
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef>Project</th>
+                  <td mat-cell *matCellDef="let project">
+                    <a class="entity-link" [routerLink]="['/projects', project.id]">{{ project.name }}</a>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef>Status</th>
+                  <td mat-cell *matCellDef="let project">
+                    <app-project-status-chip [status]="project.status" />
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="progressPercentage">
+                  <th mat-header-cell *matHeaderCellDef>Progress</th>
+                  <td mat-cell *matCellDef="let project">
+                    <div class="inline-progress">
+                      <mat-progress-bar mode="determinate" [value]="project.progressPercentage" />
+                      <span>{{ project.progressPercentage }}%</span>
+                    </div>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef class="align-end">Actions</th>
+                  <td mat-cell *matCellDef="let project" class="actions-cell">
+                    <button
+                      mat-icon-button
+                      type="button"
+                      class="ds-action-button row-action"
+                      aria-label="View project"
+                      matTooltip="View project"
+                      (click)="viewProject(project.id)"
+                    >
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="projectColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: projectColumns"></tr>
+              </table>
+            </div>
+          }
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Tasks">
+        <div class="tab-content">
+          @if (assignedTasks().length === 0) {
+            <app-empty-state
+              icon="assignment"
+              title="No assigned tasks"
+              message="This engineer has no tasks assigned yet."
+            />
+          } @else {
+            <div class="table-shell">
+              <table mat-table [dataSource]="assignedTasks()">
+                <ng-container matColumnDef="title">
+                  <th mat-header-cell *matHeaderCellDef>Task</th>
+                  <td mat-cell *matCellDef="let task">
+                    <a class="entity-link" [routerLink]="['/tasks', task.id]">{{ task.title }}</a>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="projectName">
+                  <th mat-header-cell *matHeaderCellDef>Project</th>
+                  <td mat-cell *matCellDef="let task">
+                    <a class="entity-link" [routerLink]="['/projects', task.projectId]">{{ task.projectName }}</a>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef>Status</th>
+                  <td mat-cell *matCellDef="let task">
+                    <span class="status-badge" [class]="getStatusClass(task.status)">
+                      {{ getStatusLabel(task.status) }}
+                    </span>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="completion">
+                  <th mat-header-cell *matHeaderCellDef>Completion</th>
+                  <td mat-cell *matCellDef="let task">
+                    <div class="inline-progress">
+                      <mat-progress-bar mode="determinate" [value]="task.completionPercentage" />
+                      <span>{{ task.completionPercentage }}%</span>
+                    </div>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="dueDate">
+                  <th mat-header-cell *matHeaderCellDef>Due Date</th>
+                  <td mat-cell *matCellDef="let task">{{ task.dueDate | date: 'mediumDate' }}</td>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef class="align-end">Actions</th>
+                  <td mat-cell *matCellDef="let task" class="actions-cell">
+                    <button
+                      mat-icon-button
+                      type="button"
+                      class="ds-action-button row-action"
+                      aria-label="View task"
+                      matTooltip="View task"
+                      (click)="viewTask(task.id)"
+                    >
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="taskColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: taskColumns"></tr>
+              </table>
+            </div>
+          }
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Performance">
+        <div class="tab-content">
+          @if (performance(); as performanceDetails) {
+            <div class="analytics-grid">
+              <article class="analytics-card">
+                <span class="metric-label">Tasks Completed</span>
+                <strong class="analytics-value">{{ performanceDetails.summary.totalTasksCompleted }}</strong>
+                <span class="summary-meta">Closed delivery items</span>
+              </article>
+              <article class="analytics-card">
+                <span class="metric-label">Average Completion %</span>
+                <strong class="analytics-value">{{ averageCompletionPercent() | number: '1.0-0' }}%</strong>
+                <span class="summary-meta">Across assigned tasks</span>
+              </article>
+              <article class="analytics-card">
+                <span class="metric-label">Average Completion Time</span>
+                <strong class="analytics-value">{{ performanceDetails.summary.averageTaskDuration | number: '1.0-1' }}d</strong>
+                <span class="summary-meta">Mean task duration</span>
+              </article>
+              <article class="analytics-card">
+                <span class="metric-label">Overdue Tasks</span>
+                <strong class="analytics-value">{{ overdueTasksCount() }}</strong>
+                <span class="summary-meta">Past due and still open</span>
+              </article>
+              <article class="analytics-card">
+                <span class="metric-label">Current Workload</span>
+                <strong class="analytics-value">{{ performanceDetails.summary.currentActiveTasks }}</strong>
+                <span class="summary-meta">Active assigned tasks</span>
+              </article>
+              <article class="analytics-card">
+                <span class="metric-label">On-Time Rate</span>
+                <strong class="analytics-value">{{ performanceDetails.summary.onTimeCompletionRate | number: '1.0-0' }}%</strong>
+                <span class="summary-meta">Schedule reliability</span>
+              </article>
+            </div>
+
+            <div class="charts-grid">
+              <mat-card class="section-card chart-card">
+                <mat-card-header>
+                  <mat-card-title>Productivity Trend</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  @if (performanceDetails.trend.length === 0) {
+                    <app-empty-state
+                      icon="trending_up"
+                      title="No trend data yet"
+                      message="Charts appear after completed tasks are available."
+                    />
+                  } @else {
+                    <div class="chart-frame">
+                      <canvas baseChart [data]="productivityChartData" [options]="productivityChartOptions" type="line"></canvas>
+                    </div>
+                  }
+                </mat-card-content>
+              </mat-card>
+
+              <mat-card class="section-card chart-card">
+                <mat-card-header>
+                  <mat-card-title>Completed Tasks by Month</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  @if (performanceDetails.trend.length === 0) {
+                    <app-empty-state
+                      icon="bar_chart"
+                      title="No completion history"
+                      message="Monthly completions will appear here over time."
+                    />
+                  } @else {
+                    <div class="chart-frame">
+                      <canvas baseChart [data]="completionChartData" [options]="completionChartOptions" type="bar"></canvas>
+                    </div>
+                  }
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+            <div class="kpi-grid">
+              <article class="kpi-card">
+                <span class="metric-label">Projects Worked</span>
+                <strong>{{ performanceDetails.summary.totalProjectsWorkedOn }}</strong>
+              </article>
+              <article class="kpi-card">
+                <span class="metric-label">Projects Completed</span>
+                <strong>{{ performanceDetails.summary.projectsCompleted }}</strong>
+              </article>
+              <article class="kpi-card">
+                <span class="metric-label">Finished Before Deadline</span>
+                <strong>{{ performanceDetails.summary.tasksFinishedBeforeDeadline }}</strong>
+              </article>
+              <article class="kpi-card">
+                <span class="metric-label">Finished Late</span>
+                <strong>{{ performanceDetails.summary.tasksFinishedLate }}</strong>
+              </article>
+              <article class="kpi-card">
+                <span class="metric-label">Avg Days Early/Late</span>
+                <strong>{{ performanceDetails.summary.averageDaysEarlyLate | number: '1.0-1' }}</strong>
+              </article>
+              <article class="kpi-card">
+                <span class="metric-label">Completion Reports</span>
+                <strong>{{ performanceDetails.summary.totalCompletionReportsSubmitted }}</strong>
+              </article>
+            </div>
+
+            @if (performanceDetails.recentCompletedTasks.length > 0) {
+              <mat-card class="section-card">
+                <mat-card-header>
+                  <mat-card-title>Recent Completed Tasks</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="table-shell table-shell--nested">
+                    <table mat-table [dataSource]="performanceDetails.recentCompletedTasks">
+                      <ng-container matColumnDef="taskTitle">
+                        <th mat-header-cell *matHeaderCellDef>Task</th>
+                        <td mat-cell *matCellDef="let task">{{ task.taskTitle }}</td>
+                      </ng-container>
+                      <ng-container matColumnDef="projectName">
+                        <th mat-header-cell *matHeaderCellDef>Project</th>
+                        <td mat-cell *matCellDef="let task">{{ task.projectName }}</td>
+                      </ng-container>
+                      <ng-container matColumnDef="completedAt">
+                        <th mat-header-cell *matHeaderCellDef>Completed</th>
+                        <td mat-cell *matCellDef="let task">{{ task.completedAt | date: 'mediumDate' }}</td>
+                      </ng-container>
+                      <ng-container matColumnDef="daysEarlyLate">
+                        <th mat-header-cell *matHeaderCellDef>Timing</th>
+                        <td mat-cell *matCellDef="let task">
+                          {{ task.finishedOnTime ? 'On time' : 'Late' }}
+                          ({{ task.daysEarlyLate }}d)
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="durationDays">
+                        <th mat-header-cell *matHeaderCellDef>Duration</th>
+                        <td mat-cell *matCellDef="let task">{{ task.durationDays | number: '1.0-1' }}d</td>
+                      </ng-container>
+                      <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef class="align-end">Actions</th>
+                        <td mat-cell *matCellDef="let task" class="actions-cell">
+                          <button
+                            mat-icon-button
+                            type="button"
+                            class="ds-action-button row-action"
+                            aria-label="View task"
+                            matTooltip="View task"
+                            (click)="viewTask(task.taskId)"
+                          >
+                            <mat-icon>visibility</mat-icon>
+                          </button>
+                        </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="completedTaskColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: completedTaskColumns"></tr>
+                    </table>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            }
+          }
+        </div>
+      </mat-tab>
+
+      <mat-tab label="History">
+        <div class="tab-content history-layout">
+          <mat-card class="section-card">
+            <mat-card-header>
+              <mat-card-title>Activity Timeline</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              @if (historyEntries().length === 0) {
+                <app-empty-state
+                  icon="history"
+                  title="No history yet"
+                  message="Progress logs, reports, comments, and completions will appear here."
+                />
+              } @else {
+                <div class="timeline">
+                  @for (entry of historyEntries(); track entry.id) {
+                    <article class="timeline-item" [attr.data-kind]="entry.kind">
+                      <div class="timeline-marker"></div>
+                      <div class="timeline-body">
+                        <div class="timeline-header">
+                          <strong>{{ entry.title }}</strong>
+                          <span>{{ entry.createdAt | date: 'medium' }}</span>
+                        </div>
+                        <p>{{ entry.body }}</p>
+                      </div>
+                    </article>
+                  }
+                </div>
+              }
+            </mat-card-content>
+          </mat-card>
+
+          <div class="history-side">
+            <mat-card class="section-card">
+              <mat-card-header>
+                <mat-card-title>Progress Logs</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                @if (progressLogs().length === 0) {
+                  <p class="empty-copy">No engineer progress logs recorded yet.</p>
+                } @else {
+                  <div class="log-list">
+                    @for (log of progressLogs().slice(0, 8); track log.id) {
+                      <article class="log-item">
+                        <strong>{{ log.previousProgress }}% → {{ log.newProgress }}%</strong>
+                        <span>{{ log.createdAt | date: 'mediumDate' }}</span>
+                        <p>{{ log.description || 'Progress update' }}</p>
+                      </article>
+                    }
+                  </div>
+                }
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="section-card">
+              <mat-card-header>
+                <mat-card-title>Task Comments</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                @if (commentEntries().length === 0) {
+                  <p class="empty-copy">No comments or progress notes yet.</p>
+                } @else {
+                  <div class="log-list">
+                    @for (comment of commentEntries().slice(0, 8); track comment.id) {
+                      <article class="log-item">
+                        <strong>{{ comment.author }}</strong>
+                        <span>{{ comment.progress }} · {{ comment.createdAt | date: 'mediumDate' }}</span>
+                        <p>{{ comment.body }}</p>
+                      </article>
+                    }
+                  </div>
+                }
+              </mat-card-content>
+            </mat-card>
+
+            @if (performance(); as performanceDetails) {
+              <mat-card class="section-card">
+                <mat-card-header>
+                  <mat-card-title>Completion Reports</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  @if (performanceDetails.recentCompletionReports.length === 0) {
+                    <p class="empty-copy">No completion reports submitted yet.</p>
+                  } @else {
+                    <div class="log-list">
+                      @for (report of performanceDetails.recentCompletionReports; track report.reportId) {
+                        <article class="log-item">
+                          <strong>{{ report.taskTitle }}</strong>
+                          <span>{{ report.reviewStatus }} · {{ report.uploadedAt | date: 'mediumDate' }}</span>
+                          <p>{{ report.originalFileName }}</p>
+                        </article>
+                      }
+                    </div>
+                  }
+                </mat-card-content>
+              </mat-card>
+
+              <mat-card class="section-card">
+                <mat-card-header>
+                  <mat-card-title>Task Completion History</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  @if (performanceDetails.recentCompletedTasks.length === 0) {
+                    <p class="empty-copy">No completed tasks recorded yet.</p>
+                  } @else {
+                    <div class="log-list">
+                      @for (task of performanceDetails.recentCompletedTasks; track task.taskId) {
+                        <article class="log-item">
+                          <strong>{{ task.taskTitle }}</strong>
+                          <span>
+                            {{ task.projectName }} ·
+                            {{ task.finishedOnTime ? 'On time' : 'Late' }} ·
+                            {{ task.completedAt | date: 'mediumDate' }}
+                          </span>
+                          <p>{{ task.durationDays | number: '1.0-1' }} days · {{ task.progressUpdates }} updates</p>
+                          <button
+                            mat-icon-button
+                            type="button"
+                            class="ds-action-button row-action"
+                            aria-label="View task"
+                            matTooltip="View task"
+                            (click)="viewTask(task.taskId)"
+                          >
+                            <mat-icon>visibility</mat-icon>
+                          </button>
+                        </article>
+                      }
+                    </div>
+                  }
+                </mat-card-content>
+              </mat-card>
+            }
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  }
+}

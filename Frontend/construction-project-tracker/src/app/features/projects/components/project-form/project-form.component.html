@@ -1,0 +1,95 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="project-form ds-premium-form">
+  <section class="form-section">
+    <div class="section-header">
+      <div>
+        <p class="section-kicker">Core Details</p>
+        <h2>Project identity</h2>
+      </div>
+    </div>
+
+    <div class="ds-form-grid">
+      <mat-form-field appearance="outline" class="full-width ds-field-span-2">
+      <mat-label>Project Name</mat-label>
+      <input matInput formControlName="name" />
+      @if (hasError('name', 'required')) {
+        <mat-error>Project name is required.</mat-error>
+      }
+      @if (hasError('name', 'maxlength')) {
+        <mat-error>Project name cannot exceed 200 characters.</mat-error>
+      }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width ds-field-span-2 ds-textarea-field">
+      <mat-label>Description</mat-label>
+      <textarea matInput rows="5" formControlName="description"></textarea>
+      @if (hasError('description', 'required')) {
+        <mat-error>Description is required.</mat-error>
+      }
+      @if (hasError('description', 'maxlength')) {
+        <mat-error>Description cannot exceed 2000 characters.</mat-error>
+      }
+        <mat-hint align="end">{{ form.controls.description.value?.length || 0 }} / {{ descriptionMaxLength }}</mat-hint>
+      </mat-form-field>
+    </div>
+  </section>
+
+  <section class="form-section">
+    <div class="section-header">
+      <div>
+        <p class="section-kicker">Planning</p>
+        <h2>Budget and timeline</h2>
+      </div>
+    </div>
+
+    <div class="ds-form-grid">
+      <mat-form-field appearance="outline" class="full-width ds-field-span-2">
+      <mat-label>Budget</mat-label>
+      <input matInput type="number" min="0.01" step="0.01" formControlName="budget" />
+      @if (hasError('budget', 'required')) {
+        <mat-error>Budget is required.</mat-error>
+      }
+      @if (hasError('budget', 'min')) {
+        <mat-error>Budget must be greater than zero.</mat-error>
+      }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Start Date</mat-label>
+        <input matInput type="date" formControlName="startDate" />
+        <mat-icon matSuffix>calendar_month</mat-icon>
+        @if (hasError('startDate', 'required')) {
+          <mat-error>Start date is required.</mat-error>
+        } @else {
+          <mat-hint>Select the planned project start date.</mat-hint>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>End Date</mat-label>
+        <input matInput type="date" formControlName="endDate" />
+        <mat-icon matSuffix>calendar_month</mat-icon>
+        @if (hasError('endDate', 'required')) {
+          <mat-error>End date is required.</mat-error>
+        } @else {
+          <mat-hint>Project end date must be after the start date.</mat-hint>
+        }
+      </mat-form-field>
+    </div>
+  </section>
+
+  @if (hasFormError('endBeforeStart')) {
+    <p class="form-error">End date must be after start date.</p>
+  }
+
+  <div class="form-actions">
+    <button class="ds-button-ghost" type="button" (click)="onCancel()" [disabled]="isSubmitting()">Cancel</button>
+    <button mat-flat-button color="primary" type="submit" [disabled]="isSubmitting()">
+      @if (isSubmitting()) {
+        <mat-spinner diameter="18" class="button-spinner" />
+        Saving...
+      } @else {
+        {{ submitLabel() }}
+      }
+    </button>
+  </div>
+</form>

@@ -1,0 +1,47 @@
+<div class="gantt-wrapper">
+  <div class="gantt-header">
+    <div class="task-column-header">Task</div>
+    <div class="timeline-header">
+      @for (marker of monthMarkers(); track marker.label + marker.leftPercent) {
+        <span class="month-marker" [style.left.%]="marker.leftPercent">{{ marker.label }}</span>
+      }
+    </div>
+  </div>
+
+  <div class="gantt-body">
+    <svg class="dependency-layer" viewBox="0 0 100 100" preserveAspectRatio="none">
+      @for (line of dependencyLines(); track $index) {
+        <path [attr.d]="linePath(line)" class="dependency-line" />
+      }
+    </svg>
+
+    @for (bar of bars(); track bar.task.id) {
+      <div class="gantt-row">
+        <div class="task-label" [matTooltip]="bar.task.title">
+          <span class="task-name">{{ bar.task.title }}</span>
+          @if (bar.task.isCritical) {
+            <span class="critical-badge">Critical</span>
+          }
+        </div>
+        <div class="timeline-track">
+          <div
+            class="gantt-bar-container"
+            [style.left.%]="bar.leftPercent"
+            [style.width.%]="bar.widthPercent"
+            [matTooltip]="getStatusLabel(bar.task.status) + ' • ' + bar.task.completionPercentage + '%'"
+          >
+            <div [class]="barClasses(bar.task)">
+              <div class="progress-fill" [style.width.%]="bar.task.completionPercentage"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="legend">
+    <span class="legend-item"><span class="swatch critical"></span> Critical path</span>
+    <span class="legend-item"><span class="swatch overdue"></span> Overdue</span>
+    <span class="legend-item"><span class="swatch blocked"></span> Blocked</span>
+  </div>
+</div>

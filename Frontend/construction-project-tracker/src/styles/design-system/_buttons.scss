@@ -1,0 +1,273 @@
+@use 'animations' as *;
+
+/* =========================================================
+   Unified action buttons — two variants only
+   .ds-btn--filled  |  .ds-btn--outlined
+   ========================================================= */
+
+.ds-btn {
+  --ds-btn-height: 48px;
+  --ds-btn-pad-x: 22px;
+  --ds-btn-gap: 10px;
+  --ds-btn-icon: 18px;
+  --ds-btn-radius: 9999px;
+  --ds-btn-font-size: 16px;
+  --ds-btn-font-weight: 600;
+  --ds-btn-transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-btn-gap);
+  height: var(--ds-btn-height);
+  min-height: var(--ds-btn-height);
+  max-height: var(--ds-btn-height);
+  padding: 0 var(--ds-btn-pad-x);
+  border-radius: var(--ds-btn-radius);
+  border: 1.5px solid transparent;
+  box-sizing: border-box;
+  font-family: var(--ds-font-family);
+  font-size: var(--ds-btn-font-size);
+  font-weight: var(--ds-btn-font-weight);
+  letter-spacing: 0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: none;
+  transition:
+    transform var(--ds-btn-transition),
+    background-color var(--ds-btn-transition),
+    color var(--ds-btn-transition),
+    border-color var(--ds-btn-transition),
+    box-shadow var(--ds-btn-transition);
+
+  mat-icon,
+  .mat-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--ds-btn-icon);
+    height: var(--ds-btn-icon);
+    font-size: var(--ds-btn-icon);
+    line-height: 1;
+    margin: 0;
+    flex-shrink: 0;
+    color: inherit;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ds-color-primary);
+    outline-offset: 2px;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+.ds-btn--filled {
+  background: var(--ds-color-primary);
+  border-color: var(--ds-color-primary);
+  color: #ffffff;
+
+  &:hover:not(:disabled) {
+    background: var(--ds-color-primary-hover);
+    border-color: var(--ds-color-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--ds-shadow-md);
+  }
+}
+
+.ds-btn--outlined {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.9);
+  color: #ffffff;
+
+  &:hover:not(:disabled) {
+    background: #ffffff;
+    border-color: #ffffff;
+    color: var(--ds-color-primary);
+    transform: translateY(-1px);
+    box-shadow: var(--ds-shadow-md);
+  }
+
+  &:focus-visible {
+    outline-color: rgba(255, 255, 255, 0.8);
+  }
+}
+
+/* Outlined on light surfaces (reports export, filters, etc.) */
+.ds-btn--outlined-light {
+  background: transparent;
+  border-color: var(--ds-color-border);
+  color: var(--ds-color-primary);
+
+  &:hover:not(:disabled) {
+    background: var(--ds-color-primary-light);
+    border-color: rgba(15, 45, 82, 0.22);
+    color: var(--ds-color-primary);
+    transform: translateY(-1px);
+    box-shadow: var(--ds-shadow-sm);
+  }
+}
+
+/* Filled on dark heroes — white surface for contrast */
+.hero-actions .ds-btn--filled,
+.header-actions .ds-btn--filled {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: var(--ds-color-primary);
+
+  &:hover:not(:disabled) {
+    background: var(--ds-color-primary-light);
+    border-color: #ffffff;
+    color: var(--ds-color-primary-hover);
+  }
+
+  &:focus-visible {
+    outline-color: rgba(255, 255, 255, 0.85);
+  }
+}
+
+/* Align Material page buttons to the same 48px system */
+.mat-mdc-unelevated-button,
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button,
+.mat-mdc-button {
+  --mdc-filled-button-container-height: 48px;
+  --mdc-outlined-button-container-height: 48px;
+  --mdc-text-button-container-height: 48px;
+  --mdc-protected-button-container-height: 48px;
+
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
+  padding: 0 22px !important;
+  border-radius: 9999px !important;
+  font-family: var(--ds-font-family) !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em;
+  line-height: 1 !important;
+  transition:
+    transform 150ms cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 150ms cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+
+  .mat-icon,
+  mat-icon {
+    width: 18px !important;
+    height: 18px !important;
+    font-size: 18px !important;
+    margin: 0 !important;
+  }
+
+  .mdc-button__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+}
+
+.mat-mdc-unelevated-button.mat-primary,
+.mat-mdc-raised-button.mat-primary {
+  --mdc-filled-button-container-color: var(--ds-color-primary);
+  --mdc-filled-button-label-text-color: #ffffff;
+
+  &:hover:not(:disabled) {
+    --mdc-filled-button-container-color: var(--ds-color-primary-hover);
+    box-shadow: var(--ds-shadow-md);
+  }
+}
+
+.mat-mdc-outlined-button {
+  --mdc-outlined-button-outline-color: var(--ds-color-border);
+  --mdc-outlined-button-label-text-color: var(--ds-color-primary);
+
+  &:hover:not(:disabled) {
+    background: var(--ds-color-primary-light);
+  }
+}
+
+.mat-mdc-icon-button {
+  border-radius: var(--ds-radius-md) !important;
+  @include ds-hover-fade;
+
+  &:hover {
+    background: var(--ds-color-primary-light);
+  }
+}
+
+/* Dialogs keep taller premium controls */
+.ds-premium-dialog .mat-mdc-button,
+.ds-premium-dialog .mat-mdc-unelevated-button,
+.ds-premium-dialog .mat-mdc-raised-button,
+.ds-premium-dialog .mat-mdc-outlined-button {
+  height: 56px !important;
+  min-height: 56px !important;
+  max-height: 56px !important;
+  padding-inline: 1.5rem !important;
+}
+
+.ds-premium-dialog .mat-mdc-unelevated-button.mat-primary,
+.ds-premium-dialog .mat-mdc-raised-button.mat-primary {
+  box-shadow: 0 12px 24px rgba(47, 91, 210, 0.18);
+
+  &:hover {
+    box-shadow: 0 16px 30px rgba(47, 91, 210, 0.24);
+    transform: translateY(-1px);
+  }
+}
+
+.ds-premium-dialog .ds-button-ghost {
+  min-height: 56px;
+  padding-inline: 1.25rem;
+  color: #2f5bd2;
+
+  &:hover {
+    background: rgba(47, 91, 210, 0.08);
+    color: #2348a8;
+  }
+}
+
+.ds-button-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  padding: var(--ds-space-2) var(--ds-space-4);
+  border: none;
+  border-radius: var(--ds-radius-pill);
+  background: transparent;
+  color: var(--ds-color-text-secondary);
+  font-family: var(--ds-font-family);
+  font-size: var(--ds-font-size-body);
+  font-weight: var(--ds-font-weight-medium);
+  cursor: pointer;
+  @include ds-hover-fade;
+
+  &:hover {
+    background: var(--ds-color-primary-light);
+    color: var(--ds-color-primary);
+  }
+}
+
+/* Toolbar primary CTA aligns with filled system */
+.ds-toolbar__action.mat-mdc-unelevated-button,
+.ds-toolbar__action.mat-mdc-button {
+  height: 48px !important;
+  min-height: 48px !important;
+}

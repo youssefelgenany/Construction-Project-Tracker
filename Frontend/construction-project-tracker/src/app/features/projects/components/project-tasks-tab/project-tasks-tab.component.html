@@ -1,0 +1,167 @@
+<div class="tasks-tab">
+  <div class="tab-header">
+    <div>
+      <p class="section-kicker">Execution</p>
+      <h2>Project Tasks</h2>
+    </div>
+    @if (isAdmin()) {
+      <button mat-flat-button color="primary" type="button" (click)="openAddDialog()">
+        <mat-icon>add</mat-icon>
+        Add Task
+      </button>
+    }
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <app-loading-spinner />
+    </div>
+  } @else if (tasks().length === 0) {
+    @if (isAdmin()) {
+      <app-empty-state
+        icon="assignment"
+        title="No tasks yet"
+        message="Create tasks to track work for this project."
+      />
+    } @else {
+      <app-empty-state
+        icon="assignment"
+        title="No tasks assigned to you"
+        message="You do not have any tasks assigned in this project yet."
+      />
+    }
+  } @else if (isMobile()) {
+    <div class="card-grid">
+      @for (task of tasks(); track trackByTaskId($index, task)) {
+        <app-task-card
+          [task]="task"
+          [isAdmin]="isAdmin()"
+          (edit)="openEditDialog($event)"
+          (delete)="deleteTask($event)"
+          (manageDependencies)="openDependencyDialog($event)"
+        />
+      }
+    </div>
+  } @else {
+    <div class="table-shell ds-list-table-shell">
+      <div class="table-shell-header ds-list-table-shell__header">
+        <div>
+          <p class="table-kicker ds-list-table-shell__kicker">Delivery Board</p>
+          <h3>Tasks, assignments, and deadlines</h3>
+        </div>
+      </div>
+      <div class="table-container">
+      <table mat-table class="ds-list-table" [dataSource]="tasks()">
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef>Title</th>
+          <td mat-cell *matCellDef="let task">{{ task.title }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="engineerName">
+          <th mat-header-cell *matHeaderCellDef>Assigned Engineer</th>
+          <td mat-cell *matCellDef="let task">{{ task.engineerName || '—' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="priority">
+          <th mat-header-cell *matHeaderCellDef>Priority</th>
+          <td mat-cell *matCellDef="let task">
+            <span class="priority-badge" [class]="getPriorityClass(task.priority)">
+              {{ getPriorityLabel(task.priority) }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let task">
+            <div class="status-cell">
+              <span class="status-badge" [class]="getStatusClass(task.status)">
+                {{ getStatusLabel(task.status) }}
+              </span>
+              @if (isBlocked(task) && task.incompletePrerequisites?.length) {
+                <p class="blocked-hint" [title]="prerequisiteTitles(task)">
+                  Waiting on: {{ prerequisiteTitles(task) }}
+                </p>
+              }
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="completion">
+          <th mat-header-cell *matHeaderCellDef>Completion</th>
+          <td mat-cell *matCellDef="let task" class="completion-cell">
+            <div class="completion-content">
+              <mat-progress-bar mode="determinate" [value]="task.completionPercentage" />
+              <span class="completion-value">{{ task.completionPercentage }}%</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="startDate">
+          <th mat-header-cell *matHeaderCellDef>Start Date</th>
+          <td mat-cell *matCellDef="let task">{{ task.startDate | date: 'mediumDate' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="dueDate">
+          <th mat-header-cell *matHeaderCellDef>Due Date</th>
+          <td mat-cell *matCellDef="let task">{{ task.dueDate | date: 'mediumDate' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="align-end">Actions</th>
+          <td mat-cell *matCellDef="let task">
+            <div class="ds-actions-row">
+              <a
+                mat-icon-button
+                class="ds-action-button"
+                [routerLink]="['/tasks', task.id]"
+                aria-label="View task"
+                matTooltip="View task"
+              >
+                <mat-icon>visibility</mat-icon>
+              </a>
+              @if (isAdmin()) {
+                <button
+                  mat-icon-button
+                  type="button"
+                  class="ds-action-button"
+                  aria-label="Manage dependencies"
+                  matTooltip="Manage dependencies"
+                  (click)="openDependencyDialog(task)"
+                >
+                  <mat-icon>account_tree</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  type="button"
+                  class="ds-action-button"
+                  aria-label="Edit task"
+                  matTooltip="Edit task"
+                  (click)="openEditDialog(task)"
+                  [disabled]="task.status === TaskStatus.Completed"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  type="button"
+                  class="ds-action-button action-button--danger"
+                  color="warn"
+                  aria-label="Delete task"
+                  matTooltip="Delete task"
+                  (click)="deleteTask(task)"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              }
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="visibleColumns()"></tr>
+        <tr mat-row *matRowDef="let row; columns: visibleColumns()"></tr>
+      </table>
+      </div>
+    </div>
+  }
+</div>

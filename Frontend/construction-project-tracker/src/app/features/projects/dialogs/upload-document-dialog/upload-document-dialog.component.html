@@ -1,0 +1,73 @@
+<div class="ds-premium-dialog">
+  <header class="ds-premium-dialog__header">
+    <h2 class="ds-premium-dialog__title">Upload Document</h2>
+    <p class="ds-premium-dialog__subtitle">Add a project file with category and secure storage.</p>
+  </header>
+
+  <div class="ds-premium-dialog__content">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Category</mat-label>
+      <mat-select [formControl]="categoryControl">
+        @for (category of categoryOptions; track category) {
+          <mat-option [value]="category">{{ category }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div
+      class="drop-zone"
+      [class.drop-zone-active]="isDragging()"
+      [class.drop-zone-has-file]="selectedFile()"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)"
+    >
+      @if (selectedFile(); as file) {
+        <mat-icon class="file-icon">description</mat-icon>
+        <p class="file-name">{{ file.name }}</p>
+        <p class="file-meta">{{ maxFileSizeLabel }} max · {{ categoryControl.value }}</p>
+        <button class="ds-button-ghost" type="button" (click)="removeFile()" [disabled]="isUploading()">
+          Remove file
+        </button>
+      } @else {
+        <mat-icon class="upload-icon">cloud_upload</mat-icon>
+        <p class="drop-title">Drag and drop a file here</p>
+        <p class="drop-subtitle">or choose a file from your device</p>
+        <button mat-stroked-button type="button" (click)="fileInput.click()" [disabled]="isUploading()">
+          Choose file
+        </button>
+        <p class="drop-hint">PDF, DOC, DOCX, XLS, XLSX, PNG, JPG, JPEG up to {{ maxFileSizeLabel }}</p>
+      }
+
+      <input
+        #fileInput
+        type="file"
+        hidden
+        [accept]="acceptAttribute"
+        (change)="onFileSelected($event)"
+      />
+    </div>
+
+    @if (validationError(); as error) {
+      <p class="validation-error">{{ error }}</p>
+    }
+
+    @if (isUploading()) {
+      <div class="progress-section">
+        <mat-progress-bar mode="determinate" [value]="uploadProgress()" />
+        <span>Uploading {{ uploadProgress() }}%</span>
+      </div>
+    }
+  </div>
+
+  <footer class="ds-premium-dialog__actions">
+    <button class="ds-button-ghost" type="button" (click)="cancel()" [disabled]="isUploading()">Cancel</button>
+    <button mat-flat-button color="primary" type="button" (click)="upload()" [disabled]="!canUpload()">
+      @if (isUploading()) {
+        Uploading...
+      } @else {
+        Upload
+      }
+    </button>
+  </footer>
+</div>

@@ -1,0 +1,97 @@
+<div class="documents-tab">
+  <div class="tab-header">
+    <div>
+      <p class="section-kicker">Files</p>
+      <h2>Project Documents</h2>
+    </div>
+    <div class="header-actions">
+      <app-search-box
+        placeholder="Search by file name or category"
+        (searchChange)="onSearchChange($event)"
+      />
+      @if (isAdmin()) {
+        <button mat-flat-button color="primary" type="button" (click)="openUploadDialog()">
+          <mat-icon>upload_file</mat-icon>
+          Upload
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <app-loading-spinner />
+    </div>
+  } @else if (documents().length === 0) {
+    <app-empty-state
+      icon="folder_open"
+      title="No documents yet"
+      message="Project documents will appear here once they are uploaded."
+    />
+  } @else if (filteredDocuments().length === 0) {
+    <app-empty-state
+      icon="search_off"
+      title="No matching documents"
+      message="Try adjusting your search terms."
+    />
+  } @else {
+    <div class="document-grid">
+      @for (row of filteredDocuments(); track row.id) {
+        <article class="document-card">
+          <div class="document-icon">
+            <mat-icon>description</mat-icon>
+          </div>
+          <div class="document-body">
+            <div class="document-top">
+              <div>
+                <h3>{{ row.originalFileName }}</h3>
+                <p>{{ row.category }}</p>
+              </div>
+              <span class="document-size">{{ formatSize(row.fileSize) }}</span>
+            </div>
+
+            <div class="document-meta">
+              <span><mat-icon>calendar_month</mat-icon>{{ row.uploadDate | date: 'mediumDate' }}</span>
+              <span><mat-icon>person</mat-icon>{{ row.uploadedBy }}</span>
+            </div>
+
+            <div class="document-actions">
+            <button
+              mat-icon-button
+              type="button"
+              aria-label="View document"
+              matTooltip="View"
+              [disabled]="isViewing(row.id)"
+              (click)="viewDocument(row)"
+            >
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              type="button"
+              aria-label="Download document"
+              matTooltip="Download"
+              [disabled]="isDownloading(row.id)"
+              (click)="downloadDocument(row)"
+            >
+              <mat-icon>download</mat-icon>
+            </button>
+            @if (isAdmin()) {
+              <button
+                mat-icon-button
+                type="button"
+                color="warn"
+                aria-label="Delete document"
+                matTooltip="Delete"
+                (click)="deleteDocument(row)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            }
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</div>

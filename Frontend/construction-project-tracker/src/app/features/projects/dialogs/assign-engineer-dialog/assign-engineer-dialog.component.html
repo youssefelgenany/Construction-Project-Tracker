@@ -1,0 +1,108 @@
+<h2 mat-dialog-title>Assign Engineer</h2>
+
+<mat-dialog-content>
+  @if (isLoading()) {
+    <div class="loading-state">
+      <mat-spinner diameter="36" />
+      <span>Loading engineer workload...</span>
+    </div>
+  } @else if (availableEngineers().length === 0) {
+    <div class="empty-message">
+      <mat-icon>groups</mat-icon>
+      <p>All active engineers are already assigned to this project.</p>
+    </div>
+  } @else {
+    <p class="helper-text">
+      Engineers are sorted by lowest workload first to help you balance capacity.
+    </p>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Search engineer</mat-label>
+      <input
+        matInput
+        type="text"
+        [formControl]="searchControl"
+        placeholder="Search by name, email, or position"
+      />
+    </mat-form-field>
+
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="filteredEngineers()">
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let engineer">
+            <mat-radio-button
+              [checked]="selectedEngineerId() === engineer.engineerId"
+              (click)="selectEngineer(engineer.engineerId)"
+            />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="engineerName">
+          <th mat-header-cell *matHeaderCellDef>Engineer</th>
+          <td mat-cell *matCellDef="let engineer">
+            <div class="name-cell">
+              <span class="primary">{{ engineer.engineerName }}</span>
+              <span class="secondary">{{ engineer.email }}</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="position">
+          <th mat-header-cell *matHeaderCellDef>Position</th>
+          <td mat-cell *matCellDef="let engineer">{{ engineer.position }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="projects">
+          <th mat-header-cell *matHeaderCellDef>Projects</th>
+          <td mat-cell *matCellDef="let engineer">{{ engineer.totalAssignedProjects }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="activeTasks">
+          <th mat-header-cell *matHeaderCellDef>Active Tasks</th>
+          <td mat-cell *matCellDef="let engineer">{{ engineer.activeTasks }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="overdueTasks">
+          <th mat-header-cell *matHeaderCellDef>Overdue</th>
+          <td mat-cell *matCellDef="let engineer" [class.overdue-value]="engineer.overdueTasks > 0">
+            {{ engineer.overdueTasks }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="workload">
+          <th mat-header-cell *matHeaderCellDef>Workload</th>
+          <td mat-cell *matCellDef="let engineer">
+            <app-workload-chip [level]="engineer.workloadLevel" />
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          class="selectable-row"
+          [class.selected-row]="selectedEngineerId() === row.engineerId"
+          (click)="selectEngineer(row.engineerId)"
+        ></tr>
+      </table>
+    </div>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="cancel()" [disabled]="isSubmitting()">Cancel</button>
+  <button
+    mat-flat-button
+    color="primary"
+    type="button"
+    (click)="assign()"
+    [disabled]="isLoading() || isSubmitting() || !selectedEngineerId() || availableEngineers().length === 0"
+  >
+    @if (isSubmitting()) {
+      Assigning...
+    } @else {
+      Assign
+    }
+  </button>
+</mat-dialog-actions>

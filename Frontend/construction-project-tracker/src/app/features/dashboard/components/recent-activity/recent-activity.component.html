@@ -1,0 +1,26 @@
+<mat-card class="activity-card">
+  <mat-card-header>
+    <mat-card-title>Recent Activity</mat-card-title>
+    <mat-card-subtitle>Latest updates across the platform</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="activity-list">
+      @if (activities().length === 0) {
+        <p class="empty-message">No recent activity to display.</p>
+      } @else {
+        <mat-list>
+          @for (activity of activities(); track activity.description + activity.createdAt) {
+            <mat-list-item>
+              <mat-icon matListItemIcon>{{ getActivityIcon(activity.activityType) }}</mat-icon>
+              <div matListItemTitle>{{ activity.description }}</div>
+              <div matListItemLine class="activity-meta">
+                <span class="activity-type">{{ activity.activityType }}</span>
+                <span class="activity-time">{{ activity.createdAt | date: 'medium' }}</span>
+              </div>
+            </mat-list-item>
+          }
+        </mat-list>
+      }
+    </div>
+  </mat-card-content>
+</mat-card>

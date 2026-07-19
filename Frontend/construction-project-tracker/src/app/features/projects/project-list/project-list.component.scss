@@ -1,0 +1,124 @@
+.projects-toolbar {
+  margin-bottom: var(--ds-section-gap);
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: var(--ds-space-10) 0;
+}
+
+.empty-action {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--ds-space-4);
+}
+
+.empty-shell {
+  padding: 0;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--ds-space-4);
+  position: relative;
+  transition: opacity var(--ds-transition-fast);
+
+  &.is-refreshing {
+    opacity: 0.72;
+    pointer-events: none;
+  }
+}
+
+.table-shell.is-refreshing {
+  opacity: 0.72;
+  pointer-events: none;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.35);
+    pointer-events: none;
+  }
+}
+
+.project-name-cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-2);
+  min-width: 12rem;
+}
+
+.project-title {
+  font-weight: var(--ds-font-weight-semibold);
+  font-size: 0.975rem;
+  color: var(--ds-color-text);
+  letter-spacing: -0.01em;
+}
+
+.project-meta-chip {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  padding: 0.2rem 0.65rem;
+  border-radius: var(--ds-radius-pill);
+  font-size: 0.75rem;
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.tone-danger {
+  background: rgba(198, 40, 40, 0.12);
+  color: var(--ds-color-danger);
+}
+
+.tone-warning {
+  background: rgba(198, 138, 0, 0.14);
+  color: var(--ds-color-warning);
+}
+
+.tone-primary {
+  background: var(--ds-color-primary-light);
+  color: var(--ds-color-primary);
+}
+
+.tone-neutral {
+  background: rgba(229, 234, 242, 0.9);
+  color: var(--ds-color-text-secondary);
+}
+
+.budget-cell {
+  font-weight: var(--ds-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  color: var(--ds-color-text);
+}
+
+.risk-cell {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 13rem;
+}
+
+.risk-reason {
+  color: var(--ds-color-text-secondary);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.action-button--danger:hover:not(:disabled) {
+  background: rgba(198, 40, 40, 0.08);
+}
+
+mat-paginator {
+  margin-top: var(--ds-space-4);
+  background: transparent;
+}
+
+@media (max-width: 959px) {
+  .ds-list-table-shell__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

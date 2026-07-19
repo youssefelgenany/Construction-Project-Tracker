@@ -1,0 +1,12 @@
+<section class="schedule-summary">
+  <div class="cards-grid">
+    <app-stat-card label="Blocked Tasks" [value]="summary().blockedTasksCount" icon="block" accent="#6d4c41" />
+    <app-stat-card label="Critical Tasks" [value]="summary().criticalTasksCount" icon="priority_high" accent="#c62828" />
+    <app-stat-card
+      label="Projects Behind Schedule"
+      [value]="summary().projectsBehindScheduleCount"
+      icon="schedule"
+      accent="#ef6c00"
+    />
+  </div>
+</section>

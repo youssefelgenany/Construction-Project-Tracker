@@ -1,0 +1,88 @@
+:host {
+  display: block;
+}
+
+mat-dialog-content {
+  min-width: min(100%, 480px);
+}
+
+.dialog-intro {
+  margin: 0 0 1rem;
+  color: #616161;
+  line-height: 1.5;
+}
+
+.drop-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 2rem 1.5rem;
+  border: 2px dashed #bdbdbd;
+  border-radius: 12px;
+  background: #fafafa;
+  text-align: center;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.drop-zone-active {
+  border-color: #1976d2;
+  background: #e3f2fd;
+}
+
+.drop-zone-has-file {
+  border-style: solid;
+  border-color: #90caf9;
+}
+
+.upload-icon,
+.file-icon {
+  font-size: 2.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: #1976d2;
+}
+
+.drop-title {
+  margin: 0;
+  font-weight: 600;
+  color: #424242;
+}
+
+.drop-subtitle {
+  margin: 0;
+  color: #757575;
+}
+
+.drop-hint,
+.file-meta {
+  margin: 0.25rem 0 0;
+  font-size: 0.85rem;
+  color: #757575;
+}
+
+.file-name {
+  margin: 0;
+  font-weight: 600;
+  color: #212121;
+  word-break: break-word;
+}
+
+.validation-error {
+  margin: 0.75rem 0 0;
+  color: #d32f2f;
+  font-size: 0.9rem;
+}
+
+.progress-section {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  span {
+    font-size: 0.85rem;
+    color: #616161;
+  }
+}

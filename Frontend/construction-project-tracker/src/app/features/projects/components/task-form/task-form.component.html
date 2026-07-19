@@ -1,0 +1,146 @@
+<form class="task-form ds-premium-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="ds-form-grid">
+    <mat-form-field appearance="outline" class="ds-field-span-2">
+      <mat-label>Title</mat-label>
+      <input matInput formControlName="title" maxlength="200" placeholder="Enter task title" />
+      @if (hasError('title', 'required')) {
+        <mat-error>Title is required.</mat-error>
+      }
+      @if (hasError('title', 'maxlength')) {
+        <mat-error>Title must not exceed 200 characters.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="ds-field-span-2 ds-textarea-field">
+      <mat-label>Description</mat-label>
+      <textarea
+        matInput
+        formControlName="description"
+        rows="5"
+        maxlength="2000"
+        placeholder="Describe the scope, deliverables, or field notes for this task."
+      ></textarea>
+      @if (hasError('description', 'maxlength')) {
+        <mat-error>Description must not exceed {{ descriptionMaxLength }} characters.</mat-error>
+      }
+      <mat-hint align="end">{{ descriptionCount() }} / {{ descriptionMaxLength }}</mat-hint>
+    </mat-form-field>
+
+    @if (projectStartDate() && projectEndDate()) {
+      <section class="ds-info-card ds-field-span-2">
+        <div class="ds-info-card__header">
+          <span class="ds-info-card__icon">
+            <mat-icon>info</mat-icon>
+          </span>
+          <div>
+            <h3 class="ds-info-card__title">Project Schedule</h3>
+            <p class="ds-info-card__subtitle">Tasks must stay within the approved project dates.</p>
+          </div>
+        </div>
+
+        <div class="ds-info-card__grid">
+          <div>
+            <span class="ds-info-card__label">Start</span>
+            <span class="ds-info-card__value">{{ projectStartDate() | date: 'MMM d, y' }}</span>
+          </div>
+          <div>
+            <span class="ds-info-card__label">End</span>
+            <span class="ds-info-card__value">{{ projectEndDate() | date: 'MMM d, y' }}</span>
+          </div>
+          <div>
+            <span class="ds-info-card__label">Allowed Task Dates</span>
+            <span class="ds-info-card__value">
+              {{ projectStartDate() | date: 'MMM d' }} → {{ projectEndDate() | date: 'MMM d, y' }}
+            </span>
+          </div>
+        </div>
+      </section>
+    }
+
+    <mat-form-field appearance="outline">
+      <mat-label>Assigned Engineer</mat-label>
+      <mat-select formControlName="assignedEngineerId">
+        @for (engineer of engineers(); track engineer.engineerId) {
+          <mat-option [value]="engineer.engineerId">{{ engineer.fullName }} · {{ engineer.position }}</mat-option>
+        }
+      </mat-select>
+      @if (hasError('assignedEngineerId', 'required')) {
+        <mat-error>Assigned engineer is required.</mat-error>
+      }
+      @if (isEditMode()) {
+        <mat-hint>Engineer assignment cannot be changed after creation.</mat-hint>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Priority</mat-label>
+      <mat-select formControlName="priority">
+        @for (priority of priorityOptions; track priority) {
+          <mat-option [value]="priority">{{ getPriorityLabel(priority) }}</mat-option>
+        }
+      </mat-select>
+      @if (hasError('priority', 'required')) {
+        <mat-error>Priority is required.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Start Date</mat-label>
+      <input matInput type="date" formControlName="startDate" />
+      <mat-icon matSuffix>calendar_month</mat-icon>
+      @if (hasError('startDate', 'required')) {
+        <mat-error>Start date is required.</mat-error>
+      } @else {
+        <mat-hint>Must be inside project schedule.</mat-hint>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Due Date</mat-label>
+      <input matInput type="date" formControlName="dueDate" />
+      <mat-icon matSuffix>calendar_month</mat-icon>
+      @if (hasError('dueDate', 'required')) {
+        <mat-error>Due date is required.</mat-error>
+      } @else {
+        <mat-hint>Cannot exceed project end date.</mat-hint>
+      }
+    </mat-form-field>
+
+    <section class="task-form__dependency-card ds-field-span-2">
+      <div class="task-form__dependency-header">
+        <div>
+          <h3>Dependency</h3>
+          <p>Select predecessor task</p>
+        </div>
+      </div>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Dependency</mat-label>
+        <mat-select disabled>
+          <mat-option [value]="null">No dependency</mat-option>
+        </mat-select>
+        <mat-hint>Dependencies can be configured after the task is created.</mat-hint>
+      </mat-form-field>
+    </section>
+  </div>
+
+  @if (hasFormError('dueBeforeStart')) {
+    <p class="form-error">Start date must be on or before the due date.</p>
+  }
+
+  @if (hasFormError('outsideProject')) {
+    <p class="form-error">Task dates must stay inside the project schedule.</p>
+  }
+
+  <div class="form-actions">
+    <button class="ds-button-ghost" type="button" (click)="onCancel()" [disabled]="isSubmitting()">Cancel</button>
+    <button mat-flat-button color="primary" type="submit" [disabled]="isSubmitting()">
+      @if (isSubmitting()) {
+        <mat-spinner diameter="18" class="button-spinner" />
+        {{ isEditMode() ? 'Saving...' : 'Creating...' }}
+      } @else {
+        {{ submitLabel() }}
+      }
+    </button>
+  </div>
+</form>

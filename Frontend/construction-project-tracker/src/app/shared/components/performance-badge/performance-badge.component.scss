@@ -1,0 +1,29 @@
+:host {
+  display: inline-flex;
+}
+
+mat-chip {
+  font-size: 0.75rem;
+  font-weight: 600;
+  min-height: 24px;
+}
+
+.tier-excellent {
+  --mdc-chip-label-text-color: #1b5e20;
+  background-color: #e8f5e9 !important;
+}
+
+.tier-good {
+  --mdc-chip-label-text-color: #0d47a1;
+  background-color: #e3f2fd !important;
+}
+
+.tier-average {
+  --mdc-chip-label-text-color: #e65100;
+  background-color: #fff3e0 !important;
+}
+
+.tier-needs-attention {
+  --mdc-chip-label-text-color: #b71c1c;
+  background-color: #ffebee !important;
+}

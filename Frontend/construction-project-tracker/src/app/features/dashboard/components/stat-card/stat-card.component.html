@@ -1,0 +1,11 @@
+<mat-card class="stat-card">
+  <mat-card-content>
+    <div class="stat-icon" [style.background-color]="accent() + '1a'" [style.color]="accent()">
+      <mat-icon>{{ icon() }}</mat-icon>
+    </div>
+    <div class="stat-details">
+      <span class="stat-value">{{ value() }}</span>
+      <span class="stat-label">{{ label() }}</span>
+    </div>
+  </mat-card-content>
+</mat-card>

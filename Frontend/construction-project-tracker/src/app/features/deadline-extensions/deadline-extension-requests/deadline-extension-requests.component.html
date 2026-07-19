@@ -1,0 +1,99 @@
+<app-page-header
+  title="Deadline Extension Requests"
+  subtitle="Review engineer requests to extend task and project deadlines."
+  eyebrow="Administration"
+/>
+
+@if (isLoading()) {
+  <div class="loading-container">
+    <app-loading-spinner />
+  </div>
+} @else {
+  <mat-tab-group animationDuration="200ms" (selectedIndexChange)="onTabChange($event)">
+    <mat-tab label="Pending" />
+    <mat-tab label="Approved" />
+    <mat-tab label="Rejected" />
+  </mat-tab-group>
+
+  @if (filteredRequests().length === 0) {
+    <app-empty-state
+      icon="event_busy"
+      title="No requests"
+      message="There are no deadline extension requests in this category."
+    />
+  } @else {
+    <div class="request-grid">
+      @for (request of filteredRequests(); track request.requestType + '-' + request.id) {
+        <mat-card class="request-card">
+          <mat-card-header>
+            <div class="card-title-row">
+              <div>
+                <mat-card-title>
+                  @if (request.requestType === 'Task') {
+                    Task · {{ request.taskTitle }}
+                  } @else {
+                    Project · {{ request.projectName }}
+                  }
+                </mat-card-title>
+                <mat-card-subtitle>{{ request.projectName }}</mat-card-subtitle>
+              </div>
+              <span class="status-badge" [class]="statusClass(request.status)">
+                {{ statusLabel(request.status) }}
+              </span>
+            </div>
+          </mat-card-header>
+
+          <mat-card-content>
+            <dl class="meta-list">
+              <div>
+                <dt>Engineer</dt>
+                <dd>{{ request.engineerName }}</dd>
+              </div>
+              <div>
+                <dt>Current Deadline</dt>
+                <dd>{{ request.currentDeadline | date: 'mediumDate' }}</dd>
+              </div>
+              <div>
+                <dt>Requested Deadline</dt>
+                <dd>{{ request.requestedDeadline | date: 'mediumDate' }}</dd>
+              </div>
+              <div>
+                <dt>Extra Days</dt>
+                <dd>+{{ request.requestedExtraDays }}</dd>
+              </div>
+              <div>
+                <dt>Submitted</dt>
+                <dd>{{ request.createdAt | date: 'medium' }}</dd>
+              </div>
+              @if (request.reviewedByName) {
+                <div>
+                  <dt>Reviewed By</dt>
+                  <dd>{{ request.reviewedByName }} · {{ request.reviewedAt | date: 'medium' }}</dd>
+                </div>
+              }
+            </dl>
+
+            <p class="reason">{{ request.reason }}</p>
+
+            @if (request.adminComment) {
+              <p class="admin-comment"><strong>Admin:</strong> {{ request.adminComment }}</p>
+            }
+
+            @if (request.status === ExtensionRequestStatus.Pending) {
+              <div class="actions">
+                <button mat-flat-button color="primary" type="button" (click)="openReview(request, 'approve')">
+                  <mat-icon>check_circle</mat-icon>
+                  Approve
+                </button>
+                <button mat-stroked-button color="warn" type="button" (click)="openReview(request, 'reject')">
+                  <mat-icon>cancel</mat-icon>
+                  Reject
+                </button>
+              </div>
+            }
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
+}

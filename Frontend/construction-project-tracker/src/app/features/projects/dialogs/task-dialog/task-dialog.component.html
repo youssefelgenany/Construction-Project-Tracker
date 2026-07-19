@@ -1,0 +1,61 @@
+<div class="ds-premium-dialog">
+  <header class="ds-premium-dialog__header">
+    <h2 class="ds-premium-dialog__title">{{ dialogTitle }}</h2>
+    <p class="ds-premium-dialog__subtitle">{{ dialogSubtitle }}</p>
+  </header>
+
+  <div class="ds-premium-dialog__content">
+    @if (isLoadingProjects()) {
+      <div class="ds-dialog-loading">
+        <mat-spinner diameter="36" />
+        <span>Loading projects...</span>
+      </div>
+    } @else {
+      @if (showProjectPicker) {
+        <section class="task-dialog__project-section">
+          <h3>Select Project</h3>
+          <p>Choose the project where this task should be created before entering details.</p>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Project</mat-label>
+            <mat-select [value]="selectedProjectId()" (selectionChange)="onProjectChange($event.value)">
+              <mat-option [value]="null">Select a project</mat-option>
+              @for (project of projects(); track project.id) {
+                <mat-option [value]="project.id">{{ project.name }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </section>
+      }
+
+      @if (isLoadingEngineers()) {
+        <div class="ds-dialog-loading">
+          <mat-spinner diameter="36" />
+          <span>Loading project engineers...</span>
+        </div>
+      } @else if (!selectedProjectId() && showProjectPicker) {
+        <p class="ds-dialog-empty">Select a project to continue.</p>
+      } @else if (engineers().length === 0) {
+        <section class="task-dialog__project-section">
+          <h3>Project Team Required</h3>
+          <p>Assign at least one engineer to this project before creating tasks.</p>
+          <div class="task-dialog__close-row">
+            <button class="ds-button-ghost" type="button" (click)="onCancel()">Close</button>
+          </div>
+        </section>
+      } @else {
+        <app-task-form
+          [engineers]="engineers()"
+          [initialValue]="initialValue"
+          [isEditMode]="isEditMode"
+          [isSubmitting]="isSubmitting()"
+          [projectStartDate]="projectStartDate()"
+          [projectEndDate]="projectEndDate()"
+          [submitLabel]="isEditMode ? 'Update Task' : 'Create Task'"
+          (formSubmit)="onSubmit($event)"
+          (cancelClick)="onCancel()"
+        />
+      }
+    }
+  </div>
+</div>

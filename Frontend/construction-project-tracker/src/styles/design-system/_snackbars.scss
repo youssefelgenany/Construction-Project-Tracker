@@ -1,0 +1,25 @@
+.mat-mdc-snack-bar-container {
+  border-radius: var(--ds-radius-md) !important;
+  font-family: var(--ds-font-family) !important;
+  box-shadow: var(--ds-shadow-lg) !important;
+}
+
+.mat-mdc-snack-bar-container.snackbar-success {
+  --mdc-snackbar-container-color: var(--ds-color-success);
+  --mdc-snackbar-supporting-text-color: #ffffff;
+}
+
+.mat-mdc-snack-bar-container.snackbar-error {
+  --mdc-snackbar-container-color: var(--ds-color-danger);
+  --mdc-snackbar-supporting-text-color: #ffffff;
+}
+
+.mat-mdc-snack-bar-container.snackbar-warning {
+  --mdc-snackbar-container-color: var(--ds-color-warning);
+  --mdc-snackbar-supporting-text-color: #ffffff;
+}
+
+.mat-mdc-snack-bar-container.snackbar-info {
+  --mdc-snackbar-container-color: var(--ds-color-primary);
+  --mdc-snackbar-supporting-text-color: #ffffff;
+}

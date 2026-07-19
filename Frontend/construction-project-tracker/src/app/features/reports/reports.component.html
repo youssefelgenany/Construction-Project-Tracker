@@ -1,0 +1,51 @@
+<app-page-header
+  title="Reports & Analytics"
+  subtitle="Executive performance across projects, capacity, and delivery risk over time."
+  eyebrow=""
+>
+  <div class="header-actions">
+    <button type="button" class="ds-btn ds-btn--outlined" (click)="exportExcel()" [disabled]="isExporting()">
+      <mat-icon>table_view</mat-icon>
+      Export Excel
+    </button>
+    <button type="button" class="ds-btn ds-btn--outlined" (click)="exportPdf()" [disabled]="isExporting()">
+      <mat-icon>picture_as_pdf</mat-icon>
+      Export PDF
+    </button>
+  </div>
+</app-page-header>
+
+<app-reports-filters (filtersChange)="onFiltersChange($event)" />
+
+@if (summaryLoading()) {
+  <app-reports-summary-cards [summary]="emptySummary" [loading]="true" />
+} @else if (summary()) {
+  <app-reports-summary-cards [summary]="summary()!" />
+}
+
+<app-reports-charts
+  [health]="health()"
+  [progress]="progress()"
+  [workload]="workload()"
+  [taskAnalytics]="taskAnalytics()"
+  [healthLoading]="healthLoading()"
+  [progressLoading]="progressLoading()"
+  [workloadLoading]="workloadLoading()"
+  [tasksLoading]="tasksLoading()"
+/>
+
+<app-engineer-performance-report
+  [rows]="engineerPerformance()"
+  [loading]="engineerLoading()"
+/>
+
+<app-reports-activity
+  [activities]="activity()"
+  [loading]="activityLoading()"
+/>
+
+<app-reports-attention
+  [projects]="attention()"
+  [loading]="attentionLoading()"
+  (viewProject)="viewProject($event)"
+/>

@@ -1,0 +1,47 @@
+<mat-card class="top-performers-card">
+  <mat-card-header>
+    <mat-card-title>Top Performing Engineers</mat-card-title>
+    <mat-card-subtitle>Highest-scoring engineers based on completed work history</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="engineers()">
+        <ng-container matColumnDef="engineerName">
+          <th mat-header-cell *matHeaderCellDef>Engineer</th>
+          <td mat-cell *matCellDef="let row">{{ row.engineerName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="performanceScore">
+          <th mat-header-cell *matHeaderCellDef>Score</th>
+          <td mat-cell *matCellDef="let row">{{ row.performanceScore | number: '1.0-1' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="completedTasks">
+          <th mat-header-cell *matHeaderCellDef>Completed Tasks</th>
+          <td mat-cell *matCellDef="let row">{{ row.totalTasksCompleted }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="onTimeRate">
+          <th mat-header-cell *matHeaderCellDef>On-Time %</th>
+          <td mat-cell *matCellDef="let row">{{ row.onTimeCompletionRate | number: '1.0-1' }}%</td>
+        </ng-container>
+
+        <ng-container matColumnDef="tier">
+          <th mat-header-cell *matHeaderCellDef>Rating</th>
+          <td mat-cell *matCellDef="let row">
+            <app-performance-badge [tier]="row.performanceTier" />
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell empty-cell" [attr.colspan]="displayedColumns.length">
+            No performance history is available yet.
+          </td>
+        </tr>
+      </table>
+    </div>
+  </mat-card-content>
+</mat-card>

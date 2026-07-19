@@ -1,0 +1,87 @@
+.full-width {
+  width: 100%;
+  margin-top: var(--ds-space-3);
+}
+
+.helper-text {
+  margin: 0 0 var(--ds-space-3);
+  color: var(--ds-color-text-secondary);
+  font-size: 0.9rem;
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ds-space-4);
+  padding: var(--ds-space-8) 0;
+  color: var(--ds-color-text-secondary);
+}
+
+.empty-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ds-space-3);
+  padding: var(--ds-space-8) var(--ds-space-4);
+  color: var(--ds-color-text-secondary);
+  text-align: center;
+
+  p {
+    margin: 0;
+  }
+
+  .mat-icon {
+    width: 3rem;
+    height: 3rem;
+    font-size: 3rem;
+    color: var(--ds-color-primary);
+  }
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-xl);
+}
+
+table {
+  width: 100%;
+}
+
+th.mat-mdc-header-cell {
+  font-weight: 600;
+  color: var(--ds-color-text-secondary);
+}
+
+.name-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.name-cell .primary {
+  font-weight: 500;
+}
+
+.name-cell .secondary {
+  font-size: 0.8rem;
+  color: var(--ds-color-text-secondary);
+}
+
+.selectable-row {
+  cursor: pointer;
+}
+
+.selected-row {
+  background-color: var(--ds-color-primary-light);
+}
+
+.overdue-value {
+  color: var(--ds-color-danger);
+  font-weight: 600;
+}
+
+mat-dialog-content {
+  min-height: 8rem;
+}

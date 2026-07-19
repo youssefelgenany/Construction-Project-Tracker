@@ -1,0 +1,71 @@
+<mat-card class="task-card">
+  <mat-card-header>
+    <mat-card-title>{{ task().title }}</mat-card-title>
+    <mat-card-subtitle>{{ task().engineerName || 'Unassigned' }}</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="card-row">
+      <span class="label">Priority</span>
+      <span class="priority-badge" [class]="getPriorityClass(task().priority)">
+        {{ getPriorityLabel(task().priority) }}
+      </span>
+    </div>
+
+    <div class="card-row">
+      <span class="label">Status</span>
+      <span class="status-badge" [class]="getStatusClass(task().status)">
+        {{ getStatusLabel(task().status) }}
+      </span>
+    </div>
+
+    @if (isBlocked(task()) && task().incompletePrerequisites?.length) {
+      <div class="blocked-banner">
+        <mat-icon>block</mat-icon>
+        <span>Waiting on: {{ prerequisiteTitles(task()) }}</span>
+      </div>
+    }
+
+    <div class="card-row completion-row">
+      <span class="label">Completion</span>
+      <div class="completion-content">
+        <mat-progress-bar mode="determinate" [value]="task().completionPercentage" />
+        <span class="completion-value">{{ task().completionPercentage }}%</span>
+      </div>
+    </div>
+
+    <div class="card-row">
+      <span class="label">Start Date</span>
+      <span>{{ task().startDate | date: 'mediumDate' }}</span>
+    </div>
+
+    <div class="card-row">
+      <span class="label">Due Date</span>
+      <span>{{ task().dueDate | date: 'mediumDate' }}</span>
+    </div>
+  </mat-card-content>
+
+  @if (isAdmin()) {
+    <mat-card-actions align="end">
+      <button mat-button type="button" (click)="manageDependencies.emit(task())">
+        <mat-icon>account_tree</mat-icon>
+        Dependencies
+      </button>
+      <button mat-button type="button" (click)="edit.emit(task())">
+        <mat-icon>edit</mat-icon>
+        Edit
+      </button>
+      <button mat-button type="button" color="warn" (click)="delete.emit(task())">
+        <mat-icon>delete</mat-icon>
+        Delete
+      </button>
+    </mat-card-actions>
+  } @else {
+    <mat-card-actions align="end">
+      <a mat-button [routerLink]="['/tasks', task().id]">
+        <mat-icon>open_in_new</mat-icon>
+        Open Task
+      </a>
+    </mat-card-actions>
+  }
+</mat-card>

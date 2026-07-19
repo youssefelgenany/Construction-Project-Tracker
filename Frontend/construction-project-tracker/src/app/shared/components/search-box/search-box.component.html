@@ -1,0 +1,5 @@
+<mat-form-field appearance="outline" class="search-field" [class.ds-field-compact]="compact()">
+  <mat-label>{{ placeholder() }}</mat-label>
+  <mat-icon matPrefix>search</mat-icon>
+  <input matInput [formControl]="searchControl" />
+</mat-form-field>

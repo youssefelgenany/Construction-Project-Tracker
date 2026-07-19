@@ -1,0 +1,10 @@
+.auth-layout {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ds-space-4);
+  background:
+    radial-gradient(circle at top left, var(--ds-color-primary-light), transparent 42%),
+    var(--ds-color-background);
+}

@@ -1,0 +1,214 @@
+.top-navigation {
+  position: relative;
+  z-index: 100;
+}
+
+.nav-bar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--ds-space-4);
+  min-height: var(--ds-nav-height);
+  padding: 0.65rem 0.85rem 0.65rem 1rem;
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-nav);
+  background: var(--ds-color-card);
+  box-shadow: var(--ds-shadow-nav);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-3);
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+  transition: opacity var(--ds-transition-fast);
+
+  &:hover {
+    opacity: 0.92;
+  }
+}
+
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-color-primary-light);
+  color: var(--ds-color-primary);
+  overflow: visible;
+  line-height: 1;
+
+  .mat-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    font-size: 1.6rem;
+    width: 1.6rem;
+    height: 1.6rem;
+    line-height: 1;
+  }
+}
+
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.brand-title {
+  font-size: 0.95rem;
+  font-weight: var(--ds-font-weight-semibold);
+  letter-spacing: var(--ds-letter-spacing-tight);
+  color: var(--ds-color-text);
+  white-space: nowrap;
+}
+
+.brand-subtitle {
+  font-size: 0.72rem;
+  color: var(--ds-color-text-secondary);
+  white-space: nowrap;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-space-1);
+  flex-wrap: wrap;
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 0.95rem;
+  border-radius: var(--ds-radius-pill);
+  text-decoration: none;
+  color: var(--ds-color-text-secondary);
+  font-size: 0.875rem;
+  font-weight: var(--ds-font-weight-medium);
+  white-space: nowrap;
+  transition:
+    background-color var(--ds-transition-fast),
+    color var(--ds-transition-fast),
+    transform var(--ds-transition-fast);
+
+  .mat-icon {
+    font-size: 1.05rem;
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  &:hover {
+    background: var(--ds-color-primary-light);
+    color: var(--ds-color-primary);
+    transform: translateY(-1px);
+  }
+
+  &.active {
+    background: var(--ds-color-primary);
+    color: #ffffff;
+    box-shadow: var(--ds-shadow-sm);
+
+    .mat-icon {
+      color: #ffffff;
+    }
+  }
+}
+
+.nav-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  justify-self: end;
+}
+
+.menu-toggle {
+  color: var(--ds-color-text);
+}
+
+.mobile-menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(17, 24, 39, 0.24);
+  backdrop-filter: blur(2px);
+}
+
+.mobile-menu {
+  position: absolute;
+  top: calc(100% + var(--ds-space-3));
+  left: 0;
+  right: 0;
+  z-index: 110;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-1);
+  padding: var(--ds-space-3);
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-xl);
+  background: var(--ds-color-card);
+  box-shadow: var(--ds-shadow-lg);
+}
+
+.mobile-nav-link {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-3);
+  padding: 0.85rem 1rem;
+  border-radius: var(--ds-radius-lg);
+  text-decoration: none;
+  color: var(--ds-color-text);
+  font-size: var(--ds-font-size-body);
+  font-weight: var(--ds-font-weight-medium);
+  transition:
+    background-color var(--ds-transition-fast),
+    color var(--ds-transition-fast);
+
+  .mat-icon {
+    color: var(--ds-color-text-secondary);
+  }
+
+  &:hover {
+    background: var(--ds-color-primary-light);
+    color: var(--ds-color-primary);
+
+    .mat-icon {
+      color: var(--ds-color-primary);
+    }
+  }
+
+  &.active {
+    background: var(--ds-color-primary);
+    color: #ffffff;
+
+    .mat-icon {
+      color: #ffffff;
+    }
+  }
+}
+
+@media (max-width: 1023px) {
+  .nav-bar {
+    grid-template-columns: 1fr auto;
+  }
+
+  .brand-copy {
+    display: none;
+  }
+}
+
+@media (max-width: 599px) {
+  .nav-bar {
+    padding-inline: 0.75rem;
+  }
+
+  .brand-title {
+    font-size: 0.875rem;
+  }
+}

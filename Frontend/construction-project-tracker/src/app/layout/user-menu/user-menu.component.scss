@@ -1,0 +1,53 @@
+.avatar-trigger {
+  min-width: auto;
+  padding: 0;
+  border-radius: var(--ds-radius-pill);
+}
+
+.avatar-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-color-primary);
+  color: #ffffff;
+  font-size: 0.8125rem;
+  font-weight: var(--ds-font-weight-semibold);
+  letter-spacing: 0.03em;
+  transition:
+    transform var(--ds-transition-fast),
+    box-shadow var(--ds-transition-fast);
+}
+
+.avatar-trigger:hover .avatar-circle {
+  transform: translateY(-1px);
+  box-shadow: var(--ds-shadow-sm);
+}
+
+.menu-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.85rem 1rem 0.75rem;
+}
+
+.menu-name {
+  font-size: var(--ds-font-size-body);
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-color-text);
+}
+
+.menu-email {
+  font-size: var(--ds-font-size-caption);
+  color: var(--ds-color-text-secondary);
+}
+
+:host ::ng-deep .user-menu-panel .mat-mdc-menu-content {
+  padding-top: 0;
+}
+
+:host ::ng-deep .mat-mdc-menu-item .mat-icon {
+  color: var(--ds-color-text-secondary);
+}

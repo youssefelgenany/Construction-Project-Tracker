@@ -1,0 +1,394 @@
+@if (isLoading()) {
+  <div class="loading-container">
+    <app-loading-spinner />
+  </div>
+} @else {
+  @if (task(); as details) {
+    <app-back-link [link]="isAdmin() ? '/tasks' : '/tasks'" [label]="isAdmin() ? 'Back to Tasks' : 'Back to My Tasks'" />
+
+    <app-page-header [title]="details.title" [subtitle]="projectName(details)">
+      <div class="header-actions">
+        @if (canAdminExtendDeadline()) {
+          <button type="button" class="ds-btn ds-btn--outlined" (click)="openAdminExtendDeadlineDialog()">
+            <mat-icon>calendar_clock</mat-icon>
+            Extend Deadline
+          </button>
+        }
+        @if (canRequestExtension()) {
+          <button type="button" class="ds-btn ds-btn--outlined" (click)="openRequestExtensionDialog()">
+            <mat-icon>history</mat-icon>
+            Request Deadline Extension
+          </button>
+        }
+        @if (isAdmin() && details.status !== TaskStatus.Completed) {
+          <button type="button" class="ds-btn ds-btn--filled" (click)="openEditTaskDialog()">
+            <mat-icon>edit</mat-icon>
+            Edit Task
+          </button>
+        }
+      </div>
+    </app-page-header>
+
+    @if (latestExtension(); as extension) {
+      @if (extension.status === ExtensionRequestStatus.Pending) {
+        <mat-card class="section-card extension-card">
+          <mat-card-content>
+            <div class="status-banner status-banner--warning">
+              <mat-icon>hourglass_top</mat-icon>
+              <div>
+                <strong>Waiting for admin approval</strong>
+                <p>
+                  Requested Due Date: {{ extension.requestedDeadline | date: 'mediumDate' }} · Status: Pending
+                </p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      } @else if (extension.status === ExtensionRequestStatus.Approved) {
+        <mat-card class="section-card extension-card">
+          <mat-card-content>
+            <div class="status-banner status-banner--success">
+              <mat-icon>verified</mat-icon>
+              <div>
+                <strong>Deadline Extended</strong>
+                <p>
+                  Old Due Date: {{ extension.currentDeadline | date: 'mediumDate' }} ·
+                  New Due Date: {{ extension.requestedDeadline | date: 'mediumDate' }}
+                  @if (extension.reviewedByName) {
+                    · Approved By: {{ extension.reviewedByName }}
+                  }
+                  @if (extension.reviewedAt) {
+                    · {{ extension.reviewedAt | date: 'mediumDate' }}
+                  }
+                </p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
+    }
+
+    <section class="metric-grid">
+      <article class="metric-card">
+        <strong class="metric-value">{{ details.completionPercentage }}%</strong>
+        <span class="metric-label">Completion</span>
+        <span class="metric-meta">Current task progress</span>
+      </article>
+      <article class="metric-card">
+        <span class="metric-chip" [class]="getStatusClass(details.status)">{{ getStatusLabel(details.status) }}</span>
+        <span class="metric-label">Status</span>
+        <span class="metric-meta">Workflow state</span>
+      </article>
+      <article class="metric-card">
+        <span class="metric-chip" [class]="getPriorityClass(details.priority)">{{ getPriorityLabel(details.priority) }}</span>
+        <span class="metric-label">Priority</span>
+        <span class="metric-meta">Delivery urgency</span>
+      </article>
+      <article class="metric-card">
+        <strong class="metric-value metric-value--date">{{ details.startDate | date: 'MMM d' }}</strong>
+        <span class="metric-label">Start Date</span>
+        <span class="metric-meta">{{ details.startDate | date: 'fullDate' }}</span>
+      </article>
+      <article class="metric-card">
+        <strong class="metric-value metric-value--date">{{ details.dueDate | date: 'MMM d' }}</strong>
+        <span class="metric-label">Due Date</span>
+        <span class="metric-meta">{{ details.dueDate | date: 'fullDate' }}</span>
+      </article>
+    </section>
+
+    <div class="details-layout">
+      <div class="details-main">
+        <mat-card class="section-card">
+          <mat-card-header>
+            <mat-card-title>Task Information</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <dl class="info-list">
+              <div>
+                <dt>Description</dt>
+                <dd>{{ details.description || '—' }}</dd>
+              </div>
+              <div>
+                <dt>Project</dt>
+                <dd>
+                  @if (projectLink(details); as link) {
+                    <a [routerLink]="link">{{ projectName(details) }}</a>
+                  } @else {
+                    {{ projectName(details) }}
+                  }
+                </dd>
+              </div>
+              <div>
+                <dt>Assigned Engineer</dt>
+                <dd>{{ details.engineerName || 'Unassigned' }}</dd>
+              </div>
+              <div>
+                <dt>Start Date</dt>
+                <dd>{{ details.startDate | date: 'fullDate' }}</dd>
+              </div>
+              <div>
+                <dt>Due Date</dt>
+                <dd>{{ details.dueDate | date: 'fullDate' }}</dd>
+              </div>
+            </dl>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="section-card">
+          <mat-card-header>
+            <mat-card-title>Progress</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="progress-section">
+              <div class="completion-row">
+                <mat-progress-bar mode="determinate" [value]="details.completionPercentage" />
+                <span>{{ details.completionPercentage }}%</span>
+              </div>
+
+              @if (details.status === TaskStatus.PendingReview) {
+                <div class="status-banner status-banner--warning">
+                  <mat-icon>hourglass_top</mat-icon>
+                  <span>Pending review — awaiting admin approval of the completion report.</span>
+                </div>
+                @if (canApproveOrReject()) {
+                  <div class="action-row">
+                    <button
+                      mat-flat-button
+                      color="primary"
+                      type="button"
+                      [disabled]="isReportActionPending()"
+                      (click)="approveCompletionReport()"
+                    >
+                      <mat-icon>check_circle</mat-icon>
+                      Approve
+                    </button>
+                    <button
+                      mat-stroked-button
+                      color="warn"
+                      type="button"
+                      [disabled]="isReportActionPending()"
+                      (click)="rejectCompletionReport()"
+                    >
+                      <mat-icon>cancel</mat-icon>
+                      Reject
+                    </button>
+                  </div>
+                }
+              }
+
+              @if (isBlocked(details) && details.incompletePrerequisites?.length) {
+                <div class="status-banner status-banner--blocked">
+                  <mat-icon>block</mat-icon>
+                  <div>
+                    <strong>Task blocked</strong>
+                    <p>Complete these prerequisite tasks before updating progress:</p>
+                    <ul>
+                      @for (prerequisite of details.incompletePrerequisites; track prerequisite.taskId) {
+                        <li>{{ prerequisite.title }} ({{ getStatusLabel(prerequisite.status) }})</li>
+                      }
+                    </ul>
+                  </div>
+                </div>
+              }
+
+              <div class="action-row">
+                @if (canUpdateProgress()) {
+                  <button
+                    mat-flat-button
+                    color="primary"
+                    type="button"
+                    [disabled]="isRefreshingProgress()"
+                    (click)="openUpdateProgressDialog()"
+                  >
+                    <mat-icon>trending_up</mat-icon>
+                    Update Progress
+                  </button>
+                }
+
+                @if (canSubmitCompletionReport()) {
+                  <button mat-flat-button color="primary" type="button" (click)="openSubmitReportDialog()">
+                    <mat-icon>upload_file</mat-icon>
+                    Submit Completion Report
+                  </button>
+                }
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="section-card">
+          <mat-card-header>
+            <mat-card-title>Engineer Progress Logs</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <app-task-progress-history [taskId]="details.id" />
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="section-card">
+          <mat-card-header>
+            <mat-card-title>Comments</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            @if (commentEntries().length === 0) {
+              <p class="empty-copy">No comments or engineer notes yet.</p>
+            } @else {
+              <div class="comments-list">
+                @for (comment of commentEntries(); track $index) {
+                  <article class="comment-item" [class.comment-item--rejection]="comment.kind === 'rejection'">
+                    <div class="comment-header">
+                      <strong>{{ comment.author }}</strong>
+                      <span>{{ comment.createdAt | date: 'medium' }}</span>
+                    </div>
+                    <p>{{ comment.body }}</p>
+                  </article>
+                }
+              </div>
+            }
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <aside class="details-side">
+        <mat-card class="section-card">
+          <mat-card-header>
+            <mat-card-title>Timeline</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <ol class="timeline-list">
+              <li>
+                <span class="timeline-label">Start</span>
+                <strong>{{ details.startDate | date: 'mediumDate' }}</strong>
+              </li>
+              <li>
+                <span class="timeline-label">Due</span>
+                <strong>{{ details.dueDate | date: 'mediumDate' }}</strong>
+              </li>
+              <li>
+                <span class="timeline-label">Last Updated</span>
+                <strong>{{ details.updatedAt | date: 'medium' }}</strong>
+              </li>
+              @if (details.incompletePrerequisites?.length) {
+                @for (prerequisite of details.incompletePrerequisites; track prerequisite.taskId) {
+                  <li class="timeline-item--blocked">
+                    <span class="timeline-label">Blocked by</span>
+                    <strong>{{ prerequisite.title }}</strong>
+                  </li>
+                }
+              }
+            </ol>
+          </mat-card-content>
+        </mat-card>
+
+        @if (details.completionReport; as report) {
+          <mat-card class="section-card">
+            <mat-card-header>
+              <mat-card-title>Completion Report</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <dl class="report-meta">
+                <div>
+                  <dt>File</dt>
+                  <dd>{{ report.originalFileName }}</dd>
+                </div>
+                <div>
+                  <dt>Uploaded</dt>
+                  <dd>{{ report.uploadedAt | date: 'medium' }}</dd>
+                </div>
+                <div>
+                  <dt>Uploaded By</dt>
+                  <dd>{{ report.uploadedBy }}</dd>
+                </div>
+                <div>
+                  <dt>Size</dt>
+                  <dd>{{ formatReportSize(report.fileSize) }}</dd>
+                </div>
+                <div>
+                  <dt>Approval Status</dt>
+                  <dd>{{ report.approvalStatus || '—' }}</dd>
+                </div>
+                @if (report.reviewedBy) {
+                  <div>
+                    <dt>Reviewer</dt>
+                    <dd>{{ report.reviewedBy }}</dd>
+                  </div>
+                }
+                @if (report.reviewedAt) {
+                  <div>
+                    <dt>Review Date</dt>
+                    <dd>{{ report.reviewedAt | date: 'medium' }}</dd>
+                  </div>
+                }
+                @if (report.rejectionReason || report.rejectionComment) {
+                  <div>
+                    <dt>Rejection Reason</dt>
+                    <dd>{{ report.rejectionReason || report.rejectionComment }}</dd>
+                  </div>
+                }
+              </dl>
+
+              <div class="action-row">
+                <button
+                  mat-stroked-button
+                  type="button"
+                  [disabled]="isReportActionPending()"
+                  (click)="viewCompletionReport()"
+                >
+                  View
+                </button>
+                <button mat-stroked-button type="button" (click)="downloadCompletionReport()">
+                  Download
+                </button>
+              </div>
+
+              @if (canApproveOrReject()) {
+                <div class="action-row approval-actions">
+                  <button
+                    mat-flat-button
+                    color="primary"
+                    type="button"
+                    [disabled]="isReportActionPending()"
+                    (click)="approveCompletionReport()"
+                  >
+                    <mat-icon>check_circle</mat-icon>
+                    Approve
+                  </button>
+                  <button
+                    mat-stroked-button
+                    color="warn"
+                    type="button"
+                    [disabled]="isReportActionPending()"
+                    (click)="rejectCompletionReport()"
+                  >
+                    <mat-icon>cancel</mat-icon>
+                    Reject
+                  </button>
+                </div>
+              }
+
+              @if (report.approvalHistory?.length) {
+                <div class="approval-history">
+                  <h4>Approval History</h4>
+                  <ol class="history-list">
+                    @for (entry of report.approvalHistory; track entry.id) {
+                      <li>
+                        <div class="history-row">
+                          <strong>{{ entry.action }}</strong>
+                          <span>{{ entry.reviewedAt | date: 'medium' }}</span>
+                        </div>
+                        <span class="history-meta">By {{ entry.reviewedBy || '—' }}</span>
+                        @if (entry.rejectionReason) {
+                          <p class="history-reason">{{ entry.rejectionReason }}</p>
+                        }
+                      </li>
+                    }
+                  </ol>
+                </div>
+              }
+            </mat-card-content>
+          </mat-card>
+        }
+      </aside>
+    </div>
+  }
+}

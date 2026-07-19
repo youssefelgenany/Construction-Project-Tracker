@@ -1,0 +1,32 @@
+@if (isLoading()) {
+  <div class="history-loading">
+    <app-loading-spinner />
+  </div>
+} @else if (logs().length === 0) {
+  <app-empty-state
+    icon="history"
+    title="No progress history yet"
+    message="Progress updates will appear here as work is logged."
+  />
+} @else {
+  <div class="timeline">
+    @for (entry of logs(); track entry.id) {
+      <div class="timeline-item">
+        <div class="timeline-marker">
+          <mat-icon>radio_button_checked</mat-icon>
+        </div>
+        <mat-card class="log-card">
+          <mat-card-header>
+            <mat-card-title>{{ entry.newProgress }}%</mat-card-title>
+            <mat-card-subtitle>
+              {{ entry.engineerName }} · {{ entry.createdAt | date: 'd MMM y' }}
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{ entry.description }}</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    }
+  </div>
+}

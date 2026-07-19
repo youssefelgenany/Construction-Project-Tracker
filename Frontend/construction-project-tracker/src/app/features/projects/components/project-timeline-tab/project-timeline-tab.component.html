@@ -1,0 +1,98 @@
+@if (isLoading()) {
+  <div class="loading-container">
+    <app-loading-spinner />
+  </div>
+} @else if (!timeline() || timeline()!.tasks.length === 0) {
+  <app-empty-state
+    icon="timeline"
+    title="No tasks to display"
+    message="Add tasks to this project to visualize the schedule timeline."
+  />
+} @else {
+  <div class="timeline-layout">
+    <section class="gantt-section">
+      <div class="section-header">
+        <div>
+          <h3>Project Timeline</h3>
+          <p>
+            {{ timeline()!.projectStartDate | date: 'mediumDate' }}
+            –
+            {{ timeline()!.projectEndDate | date: 'mediumDate' }}
+          </p>
+        </div>
+        <button mat-stroked-button type="button" (click)="refresh()">
+          <mat-icon>refresh</mat-icon>
+          Refresh
+        </button>
+      </div>
+      <app-project-gantt-chart [timeline]="timeline()!" />
+    </section>
+
+    <section class="critical-section">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Critical Path</mat-card-title>
+          <mat-card-subtitle>Tasks that determine the project finish date</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          @if (criticalPath().length === 0) {
+            <p class="empty-copy">No critical path could be calculated.</p>
+          } @else {
+            <div class="table-container">
+              <table mat-table [dataSource]="criticalPath()">
+                <ng-container matColumnDef="order">
+                  <th mat-header-cell *matHeaderCellDef>#</th>
+                  <td mat-cell *matCellDef="let row">{{ row.order }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="title">
+                  <th mat-header-cell *matHeaderCellDef>Task</th>
+                  <td mat-cell *matCellDef="let row">
+                    <span [class.critical-title]="row.isCritical">{{ row.title }}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="durationDays">
+                  <th mat-header-cell *matHeaderCellDef>Duration</th>
+                  <td mat-cell *matCellDef="let row">{{ row.durationDays }} days</td>
+                </ng-container>
+
+                <ng-container matColumnDef="slackDays">
+                  <th mat-header-cell *matHeaderCellDef>Slack</th>
+                  <td mat-cell *matCellDef="let row">{{ row.slackDays }} days</td>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef>Status</th>
+                  <td mat-cell *matCellDef="let row">{{ getStatusLabel(row.status) }}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="criticalColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: criticalColumns"></tr>
+              </table>
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+    </section>
+
+    @if (isAdmin()) {
+      <section class="dependency-section">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Manage Dependencies</mat-card-title>
+            <mat-card-subtitle>Select a task to configure prerequisites</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content class="dependency-actions">
+            @for (task of projectTasks(); track task.id) {
+              <button mat-stroked-button type="button" (click)="openDependencyDialog(task)">
+                <mat-icon>account_tree</mat-icon>
+                {{ task.title }}
+              </button>
+            }
+          </mat-card-content>
+        </mat-card>
+      </section>
+    }
+  </div>
+}

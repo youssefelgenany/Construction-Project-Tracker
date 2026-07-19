@@ -1,0 +1,183 @@
+@if (isLoading()) {
+  <div class="loading-container">
+    <app-loading-spinner />
+  </div>
+} @else {
+  @if (project(); as details) {
+    <app-back-link link="/projects" label="Back to Projects" />
+
+    <app-page-header
+      [title]="details.name"
+      subtitle="The control center for scope, delivery progress, engineering allocation, and project documentation."
+      eyebrow="Project Overview"
+    >
+      <div class="hero-actions">
+        @if (canAdminExtendProjectDeadline()) {
+          <button type="button" class="ds-btn ds-btn--outlined" (click)="openAdminExtendProjectDeadlineDialog()">
+            <mat-icon>calendar_clock</mat-icon>
+            Extend Deadline
+          </button>
+        }
+        @if (canRequestProjectExtension()) {
+          <button type="button" class="ds-btn ds-btn--outlined" (click)="openRequestProjectExtensionDialog()">
+            <mat-icon>history</mat-icon>
+            Request Deadline Extension
+          </button>
+        }
+        @if (isAdmin()) {
+          <button type="button" class="ds-btn ds-btn--filled" (click)="openEditProjectDialog()">
+            <mat-icon>edit</mat-icon>
+            Edit
+          </button>
+        }
+      </div>
+
+      <div class="hero-metrics">
+        <div class="metric-pill">
+          <span class="metric-label">Status</span>
+          <app-project-status-chip [status]="details.status" />
+        </div>
+        <div class="metric-pill">
+          <span class="metric-label">Progress</span>
+          <strong>{{ details.progressPercentage }}%</strong>
+        </div>
+        <div class="metric-pill">
+          <span class="metric-label">Start</span>
+          <strong>{{ details.startDate | date: 'mediumDate' }}</strong>
+        </div>
+        <div class="metric-pill">
+          <span class="metric-label">End</span>
+          <strong>{{ details.endDate | date: 'mediumDate' }}</strong>
+        </div>
+        <div class="metric-pill metric-pill-wide">
+          <span class="metric-label">Engineers</span>
+          <strong>
+            @if (assignedEngineers().length) {
+              {{ engineerNames() }}@if (extraEngineerCount() > 0) { +{{ extraEngineerCount() }} more }
+            } @else {
+              Unassigned
+            }
+          </strong>
+        </div>
+      </div>
+    </app-page-header>
+
+    @if (latestExtension(); as extension) {
+      @if (extension.status === ExtensionRequestStatus.Pending) {
+        <section class="extension-banner extension-banner--pending">
+          <mat-icon>hourglass_top</mat-icon>
+          <div>
+            <strong>Waiting for admin approval</strong>
+            <p>
+              Requested End Date: {{ extension.requestedDeadline | date: 'mediumDate' }} · Status: Pending
+            </p>
+          </div>
+        </section>
+      } @else if (extension.status === ExtensionRequestStatus.Approved) {
+        <section class="extension-banner extension-banner--approved">
+          <mat-icon>verified</mat-icon>
+          <div>
+            <strong>Deadline Extended</strong>
+            <p>
+              Old End Date: {{ extension.currentDeadline | date: 'mediumDate' }} ·
+              New End Date: {{ extension.requestedDeadline | date: 'mediumDate' }}
+              @if (extension.reviewedByName) {
+                · Approved By: {{ extension.reviewedByName }}
+              }
+              @if (extension.reviewedAt) {
+                · {{ extension.reviewedAt | date: 'mediumDate' }}
+              }
+            </p>
+          </div>
+        </section>
+      }
+    }
+
+    <section class="summary-grid">
+      <article class="summary-card">
+        <strong class="summary-value">{{ details.progressPercentage }}%</strong>
+        <span class="summary-label">Completion</span>
+        <span class="summary-meta">Current project progress</span>
+      </article>
+      <article class="summary-card">
+        <strong class="summary-value">{{ details.assignedEngineersCount }}</strong>
+        <span class="summary-label">Engineers</span>
+        <span class="summary-meta">Assigned team members</span>
+      </article>
+      <article class="summary-card">
+        <strong class="summary-value">{{ details.tasksCount }}</strong>
+        <span class="summary-label">Tasks</span>
+        <span class="summary-meta">Tracked work items</span>
+      </article>
+      <article class="summary-card">
+        <strong class="summary-value">{{ details.documentsCount }}</strong>
+        <span class="summary-label">Documents</span>
+        <span class="summary-meta">Uploaded project files</span>
+      </article>
+      <article class="summary-card">
+        <strong class="summary-value">{{ daysRemaining() ?? 0 }}</strong>
+        <span class="summary-label">Days Remaining</span>
+        <span class="summary-meta">Until planned end date</span>
+      </article>
+    </section>
+
+    <app-project-delay-prediction-card
+      [prediction]="delayPrediction()"
+      [plannedFinishDate]="details.endDate"
+      [loading]="predictionLoading()"
+    />
+
+    <mat-tab-group
+      class="project-tabs"
+      animationDuration="200ms"
+      [(selectedIndex)]="selectedTabIndex"
+    >
+      <mat-tab label="General">
+        <div class="tab-content">
+          <app-project-details-general [project]="details" />
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Engineers">
+        <ng-template matTabContent>
+          <div class="tab-content">
+            <app-project-engineers-tab
+              [projectId]="details.id"
+              (assignmentChanged)="onAssignmentChanged()"
+            />
+          </div>
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab label="Tasks">
+        <ng-template matTabContent>
+          <div class="tab-content">
+            <app-project-tasks-tab
+              [projectId]="details.id"
+              (tasksChanged)="onTasksChanged()"
+            />
+          </div>
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab label="Timeline">
+        <ng-template matTabContent>
+          <div class="tab-content">
+            <app-project-timeline-tab [projectId]="details.id" />
+          </div>
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab label="Documents">
+        <ng-template matTabContent>
+          <div class="tab-content">
+            <app-project-documents-tab
+              [projectId]="details.id"
+              (documentsChanged)="onDocumentsChanged()"
+            />
+          </div>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  }
+}

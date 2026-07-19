@@ -1,0 +1,179 @@
+.tasks-tab {
+  padding-top: 0.25rem;
+}
+
+.tab-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-4);
+  margin-bottom: var(--ds-space-5);
+  flex-wrap: wrap;
+
+  h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--ds-color-text);
+  }
+}
+
+.section-kicker,
+.table-kicker {
+  margin: 0 0 var(--ds-space-2);
+  color: var(--ds-color-text-secondary);
+  font-size: 0.75rem;
+  font-weight: var(--ds-font-weight-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: var(--ds-space-10) 0;
+}
+
+.table-shell-header {
+  padding: var(--ds-space-5);
+  border-bottom: 1px solid var(--ds-color-border);
+
+  h3 {
+    margin: 0;
+    color: var(--ds-color-text);
+    font-size: 1.1rem;
+    font-weight: var(--ds-font-weight-semibold);
+  }
+}
+
+.ds-list-table {
+  min-width: 56rem;
+}
+
+.completion-cell {
+  min-width: 12rem;
+  vertical-align: middle;
+}
+
+.completion-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  mat-progress-bar {
+    flex: 1;
+    min-width: 5rem;
+  }
+}
+
+.completion-value {
+  min-width: 2.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ds-color-text);
+}
+
+.completion-slider {
+  width: 100%;
+  max-width: 14rem;
+}
+
+.priority-badge,
+.status-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.priority-low {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.priority-medium {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.priority-high {
+  background: #fff3e0;
+  color: #ef6c00;
+}
+
+.priority-critical {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.status-not-started {
+  background: #f5f5f5;
+  color: #616161;
+}
+
+.status-in-progress {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.status-completed {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-pending-review {
+  background: #fff3e0;
+  color: #ef6c00;
+}
+
+.status-blocked {
+  background: #fce4ec;
+  color: #ad1457;
+}
+
+.status-ready {
+  background: #e8eaf6;
+  color: #3949ab;
+}
+
+.status-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.blocked-hint {
+  margin: 0;
+  max-width: 14rem;
+  font-size: 0.75rem;
+  color: #ad1457;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-select {
+  min-width: 8.5rem;
+  font-size: 0.875rem;
+}
+
+.card-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.action-button--danger:hover:not(:disabled) {
+  background: rgba(198, 40, 40, 0.08);
+}
+
+@media (max-width: 599px) {
+  .tab-header {
+    flex-direction: column;
+    align-items: stretch;
+
+    button {
+      width: 100%;
+    }
+  }
+}

@@ -1,0 +1,23 @@
+<div class="ds-premium-dialog">
+  <header class="ds-premium-dialog__header">
+    <h2 class="ds-premium-dialog__title">{{ dialogTitle }}</h2>
+    <p class="ds-premium-dialog__subtitle">{{ dialogSubtitle }}</p>
+  </header>
+
+  <div class="ds-premium-dialog__content">
+    @if (isLoading()) {
+      <div class="ds-dialog-loading">
+        <mat-spinner diameter="36" />
+        <span>Loading project details...</span>
+      </div>
+    } @else {
+      <app-project-form
+        [initialValue]="initialValue()"
+        [isSubmitting]="isSubmitting()"
+        [submitLabel]="isEditMode ? 'Update Project' : 'Create Project'"
+        (formSubmit)="onSubmit($event)"
+        (cancelClick)="onCancel()"
+      />
+    }
+  </div>
+</div>

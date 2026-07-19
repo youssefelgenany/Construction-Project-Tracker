@@ -1,0 +1,35 @@
+.activity-card {
+  height: 100%;
+  border-radius: 12px;
+}
+
+.activity-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.activity-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  font-size: 0.8rem;
+  color: #757575;
+}
+
+.activity-type {
+  color: #1976d2;
+  font-weight: 500;
+}
+
+.empty-message {
+  margin: 1rem 0;
+  text-align: center;
+  color: #757575;
+}
+
+mat-list-item {
+  height: auto !important;
+  min-height: 72px;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}

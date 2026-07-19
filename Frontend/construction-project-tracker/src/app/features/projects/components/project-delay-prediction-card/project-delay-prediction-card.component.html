@@ -1,0 +1,116 @@
+<mat-card class="prediction-card">
+  <mat-card-header>
+    <div class="card-title-row">
+      <div>
+        <mat-card-title>Delay Prediction</mat-card-title>
+        <mat-card-subtitle>Schedule-aware forecast that switches to velocity once work begins</mat-card-subtitle>
+      </div>
+      @if (prediction(); as data) {
+        <div class="badge-stack">
+          <span class="status-badge" [ngClass]="stateClass()">
+            {{ data.statusLabel }}
+          </span>
+          @if (confidenceLabel(); as confidence) {
+            <span class="confidence-badge">
+              Prediction Confidence: {{ confidence }}
+            </span>
+          }
+        </div>
+      }
+    </div>
+  </mat-card-header>
+
+  <mat-card-content>
+    @if (loading()) {
+      <div class="prediction-loading">
+        <app-loading-spinner />
+      </div>
+    } @else if (!prediction()) {
+      <p class="prediction-empty">Delay prediction is unavailable for this project.</p>
+    } @else {
+      @if (!isWaitingForPlanning()) {
+      <div class="prediction-grid">
+        <article class="prediction-stat">
+          <span class="prediction-label">Expected Progress</span>
+          <strong class="prediction-value">{{ prediction()!.expectedProgress | number: '1.2-2' }}%</strong>
+        </article>
+        <article class="prediction-stat">
+          <span class="prediction-label">Current Progress</span>
+          <strong class="prediction-value">{{ prediction()!.currentProgress | number: '1.2-2' }}%</strong>
+        </article>
+        <article class="prediction-stat">
+          <span class="prediction-label">Current Velocity</span>
+          <strong class="prediction-value">
+            @if (prediction()!.velocity > 0) {
+              {{ prediction()!.velocity | number: '1.2-2' }}%/day
+            } @else {
+              —
+            }
+          </strong>
+        </article>
+        <article class="prediction-stat">
+          <span class="prediction-label">Working Days Elapsed</span>
+          <strong class="prediction-value">{{ prediction()!.elapsedWorkingDays }}</strong>
+        </article>
+        <article class="prediction-stat">
+          <span class="prediction-label">Working Days Remaining</span>
+          <strong class="prediction-value">{{ prediction()!.remainingWorkingDays }}</strong>
+        </article>
+        <article class="prediction-stat">
+          <span class="prediction-label">Predicted Finish Date</span>
+          <strong class="prediction-value">
+            @if (finishMessage(); as message) {
+              {{ message }}
+            } @else if (prediction()!.predictedFinishDate) {
+              {{ prediction()!.predictedFinishDate | date: 'mediumDate' }}
+            } @else {
+              —
+            }
+          </strong>
+        </article>
+        <article class="prediction-stat">
+          <span class="prediction-label">Planned Finish Date</span>
+          <strong class="prediction-value">
+            @if (plannedFinishDate(); as planned) {
+              {{ planned | date: 'mediumDate' }}
+            } @else {
+              —
+            }
+          </strong>
+        </article>
+        <article class="prediction-stat" [class.prediction-stat--alert]="prediction()!.willMissDeadline">
+          <span class="prediction-label">Predicted Delay</span>
+          <strong class="prediction-value">
+            {{ prediction()!.delayWorkingDays }} working days
+          </strong>
+        </article>
+        <article class="prediction-stat">
+          <span class="prediction-label">Prediction Confidence</span>
+          <strong class="prediction-value">{{ confidenceLabel() ?? '—' }}</strong>
+        </article>
+      </div>
+
+      <div class="progress-block">
+        <div class="progress-compare">
+          <div class="progress-head">
+            <span class="prediction-label">Current Progress</span>
+            <strong>{{ prediction()!.currentProgress | number: '1.2-2' }}%</strong>
+          </div>
+          <mat-progress-bar mode="determinate" [value]="prediction()!.currentProgress"></mat-progress-bar>
+        </div>
+        <div class="progress-compare">
+          <div class="progress-head">
+            <span class="prediction-label">Expected Progress</span>
+            <strong>{{ prediction()!.expectedProgress | number: '1.2-2' }}%</strong>
+          </div>
+          <mat-progress-bar
+            class="expected-bar"
+            mode="determinate"
+            [value]="prediction()!.expectedProgress"
+          ></mat-progress-bar>
+        </div>
+      </div>
+      }
+    }
+  </mat-card-content>
+</mat-card>

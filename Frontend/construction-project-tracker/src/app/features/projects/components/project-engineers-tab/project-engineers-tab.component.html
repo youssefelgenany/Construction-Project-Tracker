@@ -1,0 +1,72 @@
+<div class="engineers-tab">
+  <div class="tab-header">
+    <div>
+      <p class="section-kicker">People</p>
+      <h2>Assigned Engineers</h2>
+    </div>
+    @if (isAdmin()) {
+      <button mat-flat-button color="primary" type="button" (click)="openAssignDialog()">
+        <mat-icon>person_add</mat-icon>
+        Assign Engineer
+      </button>
+    }
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <app-loading-spinner />
+    </div>
+  } @else if (assignments().length === 0) {
+    <app-empty-state
+      icon="engineering"
+      title="No engineers assigned"
+      message="No engineers have been assigned to this project yet."
+    />
+  } @else {
+    <div class="engineer-grid">
+      @for (row of assignments(); track trackByAssignmentId($index, row)) {
+        <article class="engineer-card">
+          <div class="engineer-avatar">{{ row.fullName.charAt(0) }}</div>
+          <div class="engineer-main">
+            <div class="engineer-heading">
+              <div>
+                <h3>{{ row.fullName }}</h3>
+                <p>{{ row.position }}</p>
+              </div>
+              @if (isAdmin()) {
+                <button
+                  mat-icon-button
+                  type="button"
+                  color="warn"
+                  aria-label="Remove assignment"
+                  (click)="removeAssignment(row)"
+                >
+                  <mat-icon>person_remove</mat-icon>
+                </button>
+              }
+            </div>
+
+            <div class="engineer-meta">
+              <span class="meta-chip">
+                <mat-icon>mail</mat-icon>
+                {{ row.email }}
+              </span>
+              <span class="meta-chip">
+                <mat-icon>calendar_month</mat-icon>
+                Assigned {{ row.assignedDate | date: 'mediumDate' }}
+              </span>
+              <span class="meta-chip">
+                <mat-icon>assignment</mat-icon>
+                Assigned Tasks visible in project workspace
+              </span>
+              <span class="meta-chip">
+                <mat-icon>monitoring</mat-icon>
+                Progress tracked through project tasks
+              </span>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</div>

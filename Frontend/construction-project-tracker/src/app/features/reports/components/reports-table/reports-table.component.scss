@@ -1,0 +1,73 @@
+.reports-table-section {
+  margin-bottom: 1.5rem;
+}
+
+.table-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #212121;
+  }
+
+  app-search-box {
+    min-width: 240px;
+  }
+}
+
+.table-container {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  background: #fff;
+}
+
+table {
+  width: 100%;
+}
+
+th.mat-mdc-header-cell {
+  font-weight: 600;
+  color: #616161;
+}
+
+.progress-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 140px;
+
+  mat-progress-bar {
+    flex: 1;
+  }
+
+  span {
+    font-size: 0.85rem;
+    color: #616161;
+    min-width: 2.5rem;
+  }
+}
+
+mat-paginator {
+  margin-top: 1rem;
+  background: transparent;
+}
+
+@media (max-width: 599px) {
+  .table-header {
+    flex-direction: column;
+    align-items: stretch;
+
+    app-search-box {
+      width: 100%;
+      min-width: 0;
+    }
+  }
+}

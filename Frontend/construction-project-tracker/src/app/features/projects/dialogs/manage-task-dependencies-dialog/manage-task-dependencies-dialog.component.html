@@ -1,0 +1,68 @@
+<h2 mat-dialog-title>Manage Dependencies</h2>
+
+<mat-dialog-content>
+  <p class="dialog-intro">
+    Configure prerequisite tasks for <strong>{{ data.task.title }}</strong>.
+    Only date-compatible tasks from this project are shown.
+  </p>
+
+  @if (isLoading()) {
+    <p>Loading dependencies...</p>
+  } @else {
+    <div class="add-row">
+      <mat-form-field appearance="outline" class="prerequisite-field">
+        <mat-label>Prerequisite task</mat-label>
+        <mat-select
+          [value]="selectedPrerequisiteId()"
+          (selectionChange)="selectedPrerequisiteId.set($event.value)"
+        >
+          <mat-option [value]="null">Select a task</mat-option>
+          @for (task of candidates(); track task.id) {
+            <mat-option [value]="task.id">
+              {{ task.title }} · {{ task.startDate | date: 'd MMM y' }} → {{ task.dueDate | date: 'd MMM y' }} · {{ getStatusLabel(task.status) }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <button
+        mat-flat-button
+        color="primary"
+        type="button"
+        (click)="addDependency()"
+        [disabled]="!selectedPrerequisiteId() || isSaving()"
+      >
+        Add
+      </button>
+    </div>
+
+    @if (candidates().length === 0) {
+      <p class="empty-state">No valid prerequisite candidates for the current schedule.</p>
+    }
+
+    @if (dependencies().length === 0) {
+      <p class="empty-state">No dependencies configured.</p>
+    } @else {
+      <mat-list class="dependency-list">
+        @for (dependency of dependencies(); track dependency.id) {
+          <mat-list-item>
+            <span matListItemTitle>{{ dependency.dependsOnTaskTitle }}</span>
+            <button
+              mat-icon-button
+              matListItemMeta
+              type="button"
+              aria-label="Remove dependency"
+              (click)="removeDependency(dependency.dependsOnTaskId)"
+              [disabled]="isSaving()"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-list-item>
+        }
+      </mat-list>
+    }
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="close()">Done</button>
+</mat-dialog-actions>

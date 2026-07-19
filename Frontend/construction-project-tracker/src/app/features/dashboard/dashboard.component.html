@@ -1,0 +1,168 @@
+@if (isLoading()) {
+  <div class="dashboard-state">
+    <app-loading-spinner />
+    <p>Loading dashboard data...</p>
+  </div>
+} @else if (hasError()) {
+  <div class="dashboard-state error-state">
+    <mat-icon>error_outline</mat-icon>
+    <h2>Unable to load dashboard</h2>
+    <p>We could not retrieve dashboard data. Please check your connection and try again.</p>
+    <button mat-flat-button color="primary" type="button" (click)="loadDashboard()">
+      <mat-icon>refresh</mat-icon>
+      Retry
+    </button>
+  </div>
+} @else {
+  @if (summary(); as stats) {
+  <app-hero-header
+    title="Dashboard"
+    [description]="'Welcome back, ' + (user()?.fullName ?? 'there') + '. Track projects, team activity, and portfolio momentum from one premium workspace.'"
+    eyebrow=""
+  >
+    <div class="hero-meta">
+      <span class="hero-chip">{{ getRoleLabel() }}</span>
+      <span class="hero-chip hero-chip-muted">{{ user()?.email }}</span>
+    </div>
+  </app-hero-header>
+
+  <section class="dashboard-section">
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker">Overview</p>
+        <h2>Performance snapshot</h2>
+      </div>
+      
+    </div>
+
+    <section class="stats-section">
+      <app-stat-card label="Total Projects" [value]="stats.totalProjects" icon="business_center" />
+      <app-stat-card label="Active Projects" [value]="stats.activeProjects" icon="deployed_code" accent="#3b82f6" />
+      <app-stat-card label="Completed Projects" [value]="stats.completedProjects" icon="task_alt" accent="#2e7d32" />
+      <app-stat-card label="Not Started" [value]="stats.notStartedProjects" icon="schedule" accent="#94a3b8" />
+      @if (isAdmin()) {
+        <app-stat-card label="Total Engineers" [value]="stats.totalEngineers" icon="engineering" accent="#0f766e" />
+      }
+      <app-stat-card
+        [label]="isAdmin() ? 'Total Tasks' : 'My Tasks'"
+        [value]="stats.totalTasks"
+        icon="assignment"
+      />
+      <app-stat-card
+        [label]="isAdmin() ? 'Completed Tasks' : 'My Completed Tasks'"
+        [value]="stats.completedTasks"
+        icon="check_circle"
+        accent="#2e7d32"
+      />
+      <app-stat-card
+        [label]="isAdmin() ? 'Pending Tasks' : 'My Pending Tasks'"
+        [value]="stats.pendingTasks"
+        icon="hourglass_top"
+        accent="#c68a00"
+      />
+      <app-stat-card
+        label="Average Progress"
+        [value]="(stats.averageProjectProgress | number: '1.0-1') + '%'"
+        icon="monitoring"
+        accent="#0f2d52"
+      />
+      @if (isAdmin()) {
+        <app-stat-card label="Total Documents" [value]="stats.totalDocuments" icon="folder_supervised" accent="#7c3aed" />
+      }
+    </section>
+  </section>
+
+  <section class="dashboard-section">
+    <div class="section-heading">
+      <div>
+        <p class="section-kicker">Insights</p>
+        <h2>Portfolio trends</h2>
+      </div>
+    </div>
+
+    <section class="charts-section">
+      <app-chart-card
+        class="chart-wide"
+        title="Project Progress"
+        subtitle="Completion percentage by project"
+      >
+        @if (projectProgress().length > 0) {
+          <canvas baseChart [data]="progressChartData" [options]="progressChartOptions" type="bar"></canvas>
+        } @else {
+          <div class="chart-empty">No project progress data available.</div>
+        }
+      </app-chart-card>
+
+      @if (isAdmin()) {
+        <app-chart-card
+          title="Project Status Distribution"
+          subtitle="Breakdown of project statuses"
+        >
+          @if (projectStatus()) {
+            <canvas baseChart [data]="statusChartData" [options]="statusChartOptions" type="pie"></canvas>
+          } @else {
+            <div class="chart-empty">No status distribution data available.</div>
+          }
+        </app-chart-card>
+
+        <app-chart-card
+          title="Monthly Projects"
+          subtitle="Projects created per month"
+        >
+          @if (monthlyProjects().length > 0) {
+            <canvas baseChart [data]="monthlyChartData" [options]="monthlyChartOptions" type="bar"></canvas>
+          } @else {
+            <div class="chart-empty">No monthly project data available.</div>
+          }
+        </app-chart-card>
+      }
+    </section>
+  </section>
+
+  @if (scheduleSummary(); as schedule) {
+    <section class="dashboard-section schedule-section">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">Planning</p>
+          <h2>Schedule health</h2>
+        </div>
+      </div>
+      <app-schedule-summary [summary]="schedule" />
+    </section>
+  }
+
+  @if (riskSummary(); as risks) {
+    <section class="dashboard-section risk-section">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">Risk</p>
+          <h2>Attention required</h2>
+        </div>
+      </div>
+      <app-risk-summary
+        [projectsAtRiskCount]="risks.projectsAtRiskCount"
+        [tasksAtRiskCount]="risks.tasksAtRiskCount"
+        [overdueTasksCount]="risks.overdueTasksCount"
+        [pendingReviewsCount]="risks.pendingReviewsCount"
+        [projects]="risks.projects"
+      />
+    </section>
+  }
+
+  @if (isAdmin()) {
+    <section class="dashboard-section">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">Operations</p>
+          <h2>Team and activity</h2>
+        </div>
+      </div>
+      <section class="admin-section">
+        <app-recent-activity class="activity-panel" [activities]="recentActivities()" />
+        <app-engineer-workload class="workload-panel" [workloads]="engineerWorkload()" />
+        <app-top-performing-engineers class="performance-panel" [engineers]="topPerformers()" />
+      </section>
+    </section>
+  }
+  }
+}

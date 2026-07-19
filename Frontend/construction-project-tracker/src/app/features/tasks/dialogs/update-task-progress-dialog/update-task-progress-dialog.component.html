@@ -1,0 +1,59 @@
+<div class="ds-premium-dialog">
+  <header class="ds-premium-dialog__header">
+    <h2 class="ds-premium-dialog__title">Update Progress</h2>
+    <p class="ds-premium-dialog__subtitle">
+      Updating progress for <strong>{{ data.taskTitle }}</strong>
+    </p>
+  </header>
+
+  <div class="ds-premium-dialog__content" [formGroup]="form">
+    <div class="current-progress">
+      <span class="label">Current Progress</span>
+      <span class="value">{{ data.currentProgress }}%</span>
+    </div>
+
+    <div class="new-progress-section">
+      <div class="slider-header">
+        <span class="label">New Progress</span>
+        <span class="value">{{ form.controls.newProgress.value }}%</span>
+      </div>
+      <mat-slider
+        class="progress-slider"
+        [min]="minNewProgress"
+        [max]="data.maxProgress"
+        step="5"
+        discrete
+        [disabled]="isSaving()"
+      >
+        <input matSliderThumb formControlName="newProgress" />
+      </mat-slider>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width ds-textarea-field">
+      <mat-label>Description</mat-label>
+      <textarea
+        matInput
+        rows="4"
+        formControlName="description"
+        placeholder="What work was completed?"
+      ></textarea>
+      @if (form.controls.description.touched && form.controls.description.hasError('required')) {
+        <mat-error>Description is required.</mat-error>
+      }
+      @if (form.controls.description.hasError('minlength')) {
+        <mat-error>Description must be at least 10 characters.</mat-error>
+      }
+    </mat-form-field>
+  </div>
+
+  <footer class="ds-premium-dialog__actions">
+    <button class="ds-button-ghost" type="button" (click)="cancel()" [disabled]="isSaving()">Cancel</button>
+    <button mat-flat-button color="primary" type="button" (click)="save()" [disabled]="form.invalid || isSaving()">
+      @if (isSaving()) {
+        Saving...
+      } @else {
+        Save
+      }
+    </button>
+  </footer>
+</div>

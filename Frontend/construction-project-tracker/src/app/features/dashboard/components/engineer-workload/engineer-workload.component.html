@@ -1,0 +1,49 @@
+<mat-card class="workload-card">
+  <mat-card-header>
+    <mat-card-title>Engineer Workload</mat-card-title>
+    <mat-card-subtitle>Top 5 engineers by capacity (lowest workload first)</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="workloads()">
+        <ng-container matColumnDef="engineerName">
+          <th mat-header-cell *matHeaderCellDef>Engineer</th>
+          <td mat-cell *matCellDef="let row">{{ row.engineerName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="assignedProjects">
+          <th mat-header-cell *matHeaderCellDef>Projects</th>
+          <td mat-cell *matCellDef="let row">{{ row.totalAssignedProjects ?? row.assignedProjects }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="assignedTasks">
+          <th mat-header-cell *matHeaderCellDef>Tasks</th>
+          <td mat-cell *matCellDef="let row">{{ row.activeTasks ?? row.assignedTasks }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="overdueTasks">
+          <th mat-header-cell *matHeaderCellDef>Overdue</th>
+          <td mat-cell *matCellDef="let row" [class.overdue-value]="row.overdueTasks > 0">
+            {{ row.overdueTasks }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="workload">
+          <th mat-header-cell *matHeaderCellDef>Workload</th>
+          <td mat-cell *matCellDef="let row">
+            <app-workload-chip [level]="row.workloadLevel" />
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell empty-cell" [attr.colspan]="displayedColumns.length">
+            No engineer workload data available.
+          </td>
+        </tr>
+      </table>
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,54 @@
+body {
+  font-family: var(--ds-font-family);
+  font-size: var(--ds-font-size-body);
+  font-weight: var(--ds-font-weight-regular);
+  line-height: var(--ds-line-height-normal);
+  color: var(--ds-color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ds-page-title {
+  margin: 0;
+  font-size: var(--ds-font-size-page-title);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-tight);
+  letter-spacing: var(--ds-letter-spacing-tight);
+  color: var(--ds-color-text);
+}
+
+.ds-section-title {
+  margin: 0;
+  font-size: var(--ds-font-size-section-title);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-line-height-tight);
+  color: var(--ds-color-text);
+}
+
+.ds-card-title {
+  margin: 0;
+  font-size: var(--ds-font-size-card-title);
+  font-weight: var(--ds-font-weight-medium);
+  line-height: var(--ds-line-height-tight);
+  color: var(--ds-color-text);
+}
+
+.ds-body {
+  margin: 0;
+  font-size: var(--ds-font-size-body);
+  font-weight: var(--ds-font-weight-regular);
+  line-height: var(--ds-line-height-normal);
+  color: var(--ds-color-text);
+}
+
+.ds-caption {
+  margin: 0;
+  font-size: var(--ds-font-size-caption);
+  font-weight: var(--ds-font-weight-regular);
+  line-height: var(--ds-line-height-normal);
+  color: var(--ds-color-text-secondary);
+}
+
+.ds-text-secondary {
+  color: var(--ds-color-text-secondary);
+}

@@ -1,0 +1,237 @@
+<app-page-header
+  title="Projects"
+  subtitle="Plan, track, and manage construction projects from groundbreaking through completion."
+  eyebrow=""
+/>
+
+<section class="ds-toolbar projects-toolbar">
+  <div class="ds-toolbar__search">
+    <app-search-box
+      [compact]="true"
+      placeholder="Search by project name..."
+      [initialValue]="searchTerm()"
+      (searchChange)="onSearchChange($event)"
+    />
+  </div>
+
+  <mat-form-field appearance="outline" class="ds-toolbar__filter ds-field-compact">
+    <mat-label>Status</mat-label>
+    <mat-select [value]="filterStatus()" (selectionChange)="onStatusFilterChange($event.value)">
+      <mat-option [value]="null">All</mat-option>
+      @for (status of statusOptions; track status) {
+        <mat-option [value]="status">{{ getStatusFilterLabel(status) }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="ds-toolbar__filter ds-field-compact">
+    <mat-label>Risk</mat-label>
+    <mat-select [value]="filterRiskLevel()" (selectionChange)="onRiskFilterChange($event.value)">
+      <mat-option [value]="null">All</mat-option>
+      @for (level of riskOptions; track level) {
+        <mat-option [value]="level">{{ getRiskFilterLabel(level) }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <div class="ds-toolbar__sort-group">
+    <mat-form-field appearance="outline" floatLabel="always" class="ds-toolbar__sort-field ds-field-compact">
+      <mat-label>Sort</mat-label>
+      <mat-select [value]="sortActive()" (selectionChange)="onSortFilterChange($event.value)">
+        @for (option of sortOptions; track option.field) {
+          <mat-option [value]="option.field">{{ option.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <button
+      mat-icon-button
+      type="button"
+      class="ds-toolbar__sort-direction"
+      [attr.aria-label]="sortDirection() === 'asc' ? 'Sort ascending' : 'Sort descending'"
+      [matTooltip]="sortDirection() === 'asc' ? 'Ascending' : 'Descending'"
+      (click)="onSortDirectionToggle()"
+    >
+      <mat-icon>{{ sortDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+    </button>
+  </div>
+
+  @if (isAdmin()) {
+    <button mat-flat-button color="primary" class="ds-toolbar__action" type="button" (click)="openCreateProjectDialog()">
+      <mat-icon>add</mat-icon>
+      New Project
+    </button>
+  }
+</section>
+
+@if (isLoading()) {
+  <div class="loading-container ds-card">
+    <app-loading-spinner />
+  </div>
+} @else if (displayedProjects().length === 0 && !hasActiveFilters()) {
+  <section class="empty-shell">
+    <app-empty-state
+      icon="domain"
+      title="No projects yet"
+      message="Create your first project to start tracking progress, documents, assignments, and delivery health."
+    />
+  </section>
+  @if (isAdmin()) {
+    <div class="empty-action">
+      <button mat-flat-button color="primary" type="button" (click)="openCreateProjectDialog()">Create Project</button>
+    </div>
+  }
+} @else if (displayedProjects().length === 0) {
+  <section class="empty-shell">
+    <app-no-results [query]="searchTerm()" />
+  </section>
+} @else if (isMobile()) {
+  <div class="card-grid" [class.is-refreshing]="isRefreshing()">
+    @for (project of displayedProjects(); track trackByProjectId($index, project)) {
+      <app-project-card
+        [project]="project"
+        [isAdmin]="isAdmin()"
+        (view)="viewProject($event)"
+        (edit)="editProject($event)"
+        (delete)="deleteProject($event)"
+      />
+    }
+  </div>
+} @else {
+  <div class="table-shell ds-list-table-shell" [class.is-refreshing]="isRefreshing()">
+    <div class="table-shell-header ds-list-table-shell__header">
+      <div>
+        <p class="table-kicker ds-list-table-shell__kicker">Overview</p>
+        <h2>Active project directory</h2>
+      </div>
+      <span class="table-count ds-list-table-shell__count">{{ totalCount() }} projects</span>
+    </div>
+
+    <div class="table-container">
+      <table
+        mat-table
+        class="ds-list-table"
+        [dataSource]="displayedProjects()"
+        matSort
+        [matSortActive]="sortActive()"
+        [matSortDirection]="sortDirection()"
+        (matSortChange)="onSortChange($event)"
+      >
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="name">Project Name</th>
+          <td mat-cell *matCellDef="let project">
+            <div class="project-name-cell">
+              <span class="project-title">{{ project.name }}</span>
+              <span class="project-meta-chip" [class]="projectHealthTone(project)">
+                {{ project.overdueTaskCount }} overdue
+              </span>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="risk">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="risk">Risk</th>
+          <td mat-cell *matCellDef="let project">
+            <div class="risk-cell">
+              <app-risk-chip [level]="project.riskLevel" />
+              <span class="risk-reason">{{ project.reason }}</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="budget">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="budget" class="align-end">Budget</th>
+          <td mat-cell *matCellDef="let project" class="budget-cell align-end">{{ project.budget | currency }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="overdueTasks">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="overdue" class="align-center">Overdue</th>
+          <td mat-cell *matCellDef="let project" class="align-center">{{ project.overdueTaskCount }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="startDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="startDate">Start Date</th>
+          <td mat-cell *matCellDef="let project" class="date-cell">{{ project.startDate | date: 'mediumDate' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="endDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="deadline">End Date</th>
+          <td mat-cell *matCellDef="let project" class="date-cell">{{ project.endDate | date: 'mediumDate' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef class="align-center">Status</th>
+          <td mat-cell *matCellDef="let project" class="align-center">
+            <app-project-status-chip [status]="project.status" />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="progress">
+          <th mat-header-cell *matHeaderCellDef class="align-end">Progress</th>
+          <td mat-cell *matCellDef="let project">
+            <div class="progress-cell">
+              <mat-progress-bar mode="determinate" [value]="project.progressPercentage"></mat-progress-bar>
+              <span>{{ project.progressPercentage }}%</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="align-end">Actions</th>
+          <td mat-cell *matCellDef="let project">
+            <div class="ds-actions-row">
+              <button
+                mat-icon-button
+                type="button"
+                class="ds-action-button"
+                aria-label="View project"
+                matTooltip="View project"
+                (click)="viewProject(project)"
+              >
+                <mat-icon>visibility</mat-icon>
+              </button>
+              @if (isAdmin()) {
+                <button
+                  mat-icon-button
+                  type="button"
+                  class="ds-action-button"
+                  aria-label="Edit project"
+                  matTooltip="Edit project"
+                  (click)="editProject(project)"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  type="button"
+                  class="ds-action-button action-button--danger"
+                  color="warn"
+                  aria-label="Delete project"
+                  matTooltip="Delete project"
+                  [disabled]="isDeleting(project.id)"
+                  (click)="deleteProject(project)"
+                >
+                  <mat-icon>{{ isDeleting(project.id) ? 'hourglass_top' : 'delete' }}</mat-icon>
+                </button>
+              }
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+  </div>
+}
+
+@if (displayedProjects().length > 0 || hasActiveFilters()) {
+  <mat-paginator
+    [length]="totalCount()"
+    [pageIndex]="pageIndex()"
+    [pageSize]="pageSize()"
+    [pageSizeOptions]="[5, 10, 25, 50]"
+    (page)="onPageChange($event)"
+    showFirstLastButtons
+  />
+}

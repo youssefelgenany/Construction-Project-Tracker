@@ -1,0 +1,21 @@
+.reports-toolbar {
+  margin-bottom: var(--ds-section-gap);
+}
+
+.ds-toolbar__filter--wide {
+  flex: 0 0 11rem;
+  width: 11rem;
+}
+
+.date-field {
+  flex: 0 0 10.5rem;
+  width: 10.5rem;
+}
+
+@media (max-width: 959px) {
+  .ds-toolbar__filter--wide,
+  .date-field {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+}

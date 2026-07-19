@@ -1,0 +1,53 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\Youssef Khaled\\Desktop\\ConstructionProjectTracker\\Backend\\ConstructionProjectTracker.API\\wwwroot\\uploads\\projects\\.gitkeep",
+      "PackagePath": "staticwebassets\\uploads\\projects\\.gitkeep"
+    },
+    {
+      "Id": "C:\\Users\\Youssef Khaled\\Desktop\\ConstructionProjectTracker\\Backend\\ConstructionProjectTracker.API\\wwwroot\\uploads\\projects\\1\\75730bb0-29be-4644-b581-784f8693d2d5.docx",
+      "PackagePath": "staticwebassets\\uploads\\projects\\1\\75730bb0-29be-4644-b581-784f8693d2d5.docx"
+    },
+    {
+      "Id": "C:\\Users\\Youssef Khaled\\Desktop\\ConstructionProjectTracker\\Backend\\ConstructionProjectTracker.API\\wwwroot\\uploads\\projects\\1\\e285297a-be21-4345-abde-5d2efaf46b3e.pdf",
+      "PackagePath": "staticwebassets\\uploads\\projects\\1\\e285297a-be21-4345-abde-5d2efaf46b3e.pdf"
+    },
+    {
+      "Id": "C:\\Users\\Youssef Khaled\\Desktop\\ConstructionProjectTracker\\Backend\\ConstructionProjectTracker.API\\wwwroot\\uploads\\tasks\\2\\a9aafdbd-1dd6-436f-a8e0-94e0c48ab866.docx",
+      "PackagePath": "staticwebassets\\uploads\\tasks\\2\\a9aafdbd-1dd6-436f-a8e0-94e0c48ab866.docx"
+    },
+    {
+      "Id": "C:\\Users\\Youssef Khaled\\Desktop\\ConstructionProjectTracker\\Backend\\ConstructionProjectTracker.API\\wwwroot\\uploads\\tasks\\3\\6c72af3a-09c8-4a2b-a63b-b9392d12592e.docx",
+      "PackagePath": "staticwebassets\\uploads\\tasks\\3\\6c72af3a-09c8-4a2b-a63b-b9392d12592e.docx"
+    },
+    {
+      "Id": "C:\\Users\\Youssef Khaled\\Desktop\\ConstructionProjectTracker\\Backend\\ConstructionProjectTracker.API\\wwwroot\\uploads\\tasks\\4\\d53ce4b0-f519-48f2-9f4c-088275b85f02.docx",
+      "PackagePath": "staticwebassets\\uploads\\tasks\\4\\d53ce4b0-f519-48f2-9f4c-088275b85f02.docx"
+    },
+    {
+      "Id": "C:\\Users\\Youssef Khaled\\Desktop\\ConstructionProjectTracker\\Backend\\ConstructionProjectTracker.API\\wwwroot\\uploads\\tasks\\7\\013b78fb-cd65-4e5a-889e-53ed1fbcf11e.pdf",
+      "PackagePath": "staticwebassets\\uploads\\tasks\\7\\013b78fb-cd65-4e5a-889e-53ed1fbcf11e.pdf"
+    },
+    {
+      "Id": "C:\\Users\\Youssef Khaled\\Desktop\\ConstructionProjectTracker\\Backend\\ConstructionProjectTracker.API\\wwwroot\\uploads\\tasks\\8\\9f4b5532-137a-4dfe-b9f4-b9daa1b6adec.pdf",
+      "PackagePath": "staticwebassets\\uploads\\tasks\\8\\9f4b5532-137a-4dfe-b9f4-b9daa1b6adec.pdf"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.ConstructionProjectTracker.API.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.ConstructionProjectTracker.API.props",
+      "PackagePath": "build\\ConstructionProjectTracker.API.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.ConstructionProjectTracker.API.props",
+      "PackagePath": "buildMultiTargeting\\ConstructionProjectTracker.API.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.ConstructionProjectTracker.API.props",
+      "PackagePath": "buildTransitive\\ConstructionProjectTracker.API.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

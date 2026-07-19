@@ -1,0 +1,9 @@
+<div class="no-results">
+  <mat-icon>search_off</mat-icon>
+  <h3>No results found</h3>
+  @if (query()) {
+    <p>No matches for "<strong>{{ query() }}</strong>". Try a different search term.</p>
+  } @else {
+    <p>Try adjusting your filters or search criteria.</p>
+  }
+</div>

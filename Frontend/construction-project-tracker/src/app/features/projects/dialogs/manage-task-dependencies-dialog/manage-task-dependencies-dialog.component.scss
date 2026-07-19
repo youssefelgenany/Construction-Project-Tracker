@@ -1,0 +1,25 @@
+.dialog-intro {
+  margin: 0 0 1rem;
+  color: #616161;
+}
+
+.add-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.prerequisite-field {
+  flex: 1;
+}
+
+.empty-state {
+  margin: 0;
+  color: #757575;
+}
+
+.dependency-list {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}

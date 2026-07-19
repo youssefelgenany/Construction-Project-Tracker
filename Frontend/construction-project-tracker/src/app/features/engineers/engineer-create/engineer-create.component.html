@@ -1,0 +1,14 @@
+<app-page-header title="Add Engineer" subtitle="Create a new engineer account">
+  <a mat-button routerLink="/engineers">Back to List</a>
+</app-page-header>
+
+<mat-card>
+  <mat-card-content>
+    <app-engineer-form
+      submitLabel="Create Engineer"
+      [isSubmitting]="isSubmitting()"
+      (formSubmit)="onSubmit($event)"
+      (cancelClick)="onCancel()"
+    />
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,63 @@
+<div class="ds-premium-dialog">
+  <header class="ds-premium-dialog__header">
+    <h2 class="ds-premium-dialog__title">
+      @if (data.target === 'task') {
+        Request Deadline Extension
+      } @else {
+        Request Project Deadline Extension
+      }
+    </h2>
+    <p class="ds-premium-dialog__subtitle">
+      Submit a request for <strong>{{ data.entityTitle }}</strong>. Current deadline:
+      {{ data.currentDeadline | date: 'mediumDate' }}.
+      @if (data.maxDeadline) {
+        Must remain within project end date {{ data.maxDeadline | date: 'mediumDate' }}.
+      }
+    </p>
+  </header>
+
+  <div class="ds-premium-dialog__content">
+    <form class="ds-premium-form" [formGroup]="form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>
+          @if (data.target === 'task') {
+            Requested Due Date
+          } @else {
+            Requested End Date
+          }
+        </mat-label>
+        <input matInput type="date" formControlName="requestedDate" />
+        @if (form.controls.requestedDate.touched && form.controls.requestedDate.hasError('required')) {
+          <mat-error>Requested date is required.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width ds-textarea-field">
+        <mat-label>Reason</mat-label>
+        <textarea
+          matInput
+          rows="4"
+          formControlName="reason"
+          placeholder="Explain why more time is needed (minimum 20 characters)"
+        ></textarea>
+        @if (form.controls.reason.touched && form.controls.reason.hasError('required')) {
+          <mat-error>Reason is required.</mat-error>
+        }
+        @if (form.controls.reason.hasError('minlength')) {
+          <mat-error>Reason must be at least 20 characters.</mat-error>
+        }
+      </mat-form-field>
+    </form>
+  </div>
+
+  <footer class="ds-premium-dialog__actions">
+    <button class="ds-button-ghost" type="button" (click)="cancel()" [disabled]="isSubmitting()">Cancel</button>
+    <button mat-flat-button color="primary" type="button" (click)="submit()" [disabled]="isSubmitting()">
+      @if (isSubmitting()) {
+        Submitting...
+      } @else {
+        Submit Request
+      }
+    </button>
+  </footer>
+</div>

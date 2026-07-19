@@ -1,0 +1,64 @@
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 0;
+}
+
+.timeline-layout {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0.35rem 0 0;
+    color: #757575;
+    font-size: 0.9rem;
+  }
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+}
+
+.critical-title {
+  font-weight: 600;
+  color: #c62828;
+}
+
+.empty-copy {
+  margin: 0;
+  color: #757575;
+}
+
+.dependency-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.dependency-actions button mat-icon {
+  margin-right: 0.35rem;
+}
+
+@media (max-width: 959px) {
+  .section-header {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,71 @@
+<button
+  mat-icon-button
+  type="button"
+  class="notification-trigger"
+  [matMenuTriggerFor]="notificationMenu"
+  [matBadge]="unreadCount() > 0 ? unreadCount() : null"
+  matBadgeColor="warn"
+  matBadgeSize="small"
+  aria-label="Notifications"
+  (menuOpened)="onMenuOpened()"
+>
+  <mat-icon>notifications</mat-icon>
+</button>
+
+<mat-menu
+  #notificationMenu="matMenu"
+  xPosition="before"
+  [overlapTrigger]="false"
+  panelClass="ds-notification-menu"
+>
+  <div class="ds-notification-panel" (click)="$event.stopPropagation()">
+    <header class="ds-notification-panel__header">
+      <h3 class="ds-notification-panel__title">Notifications</h3>
+      <button
+        mat-icon-button
+        type="button"
+        class="ds-notification-panel__mark-all"
+        aria-label="Mark all as read"
+        matTooltip="Mark all as read"
+        [disabled]="unreadCount() === 0"
+        (click)="markAllRead($event)"
+      >
+        <mat-icon>done_all</mat-icon>
+      </button>
+    </header>
+
+    <div class="ds-notification-panel__body">
+      @if (notifications().length === 0) {
+        <div class="ds-notification-panel__empty">
+          <span class="ds-notification-panel__empty-icon" aria-hidden="true">
+            <mat-icon>notifications_none</mat-icon>
+          </span>
+          <strong>No new notifications</strong>
+          <p>We'll notify you when something requires your attention.</p>
+        </div>
+      } @else {
+        <ul class="ds-notification-list">
+          @for (item of notifications(); track item.id) {
+            <li>
+              <button
+                type="button"
+                class="ds-notification-item"
+                [class.ds-notification-item--unread]="!item.isRead"
+                (click)="openNotification(item)"
+              >
+                <span class="ds-notification-item__icon" [class]="iconClassFor(item.type)">
+                  <mat-icon>{{ iconFor(item.type) }}</mat-icon>
+                </span>
+                <span class="ds-notification-item__content">
+                  <span class="ds-notification-item__title">{{ item.title }}</span>
+                  <span class="ds-notification-item__message">{{ item.message }}</span>
+                  <span class="ds-notification-item__time">{{ relativeTime(item.createdAt) }}</span>
+                </span>
+              </button>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  </div>
+</mat-menu>

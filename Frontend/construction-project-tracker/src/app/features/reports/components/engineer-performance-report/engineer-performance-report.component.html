@@ -1,0 +1,96 @@
+<section class="performance-section">
+  <div class="section-heading">
+    <p class="section-kicker">Leadership</p>
+    <h2>Engineer Performance</h2>
+    <p>Filter-aware leaderboard with on-time delivery and capacity signals.</p>
+  </div>
+
+  <div class="table-shell">
+    <div class="table-shell-header">
+      <div>
+        <h3>Performance leaderboard</h3>
+        <p>Top performer highlighted by score across the active filters.</p>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <div class="section-loading">
+        <app-loading-spinner />
+      </div>
+    } @else {
+      <div class="table-wrapper">
+        <table mat-table matSort [dataSource]="sortedRows()" (matSortChange)="onSortChange($event)">
+          <ng-container matColumnDef="engineerName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="engineerName">Engineer</th>
+            <td mat-cell *matCellDef="let row">
+              <div class="engineer-cell" [class.top-performer]="row.isTopPerformer">
+                @if (row.isTopPerformer) {
+                  <mat-icon class="star-icon" aria-hidden="true">star</mat-icon>
+                }
+                <span>{{ row.engineerName }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="performanceScore">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="performanceScore">Score</th>
+            <td mat-cell *matCellDef="let row">{{ row.performanceScore | number: '1.0-1' }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="projects">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="projects">Projects</th>
+            <td mat-cell *matCellDef="let row">{{ row.projects }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="completedTasks">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="completedTasks">Completed</th>
+            <td mat-cell *matCellDef="let row">{{ row.completedTasks }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="averageCompletionPercent">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="averageCompletionPercent">Avg Completion</th>
+            <td mat-cell *matCellDef="let row">{{ row.averageCompletionPercent | number: '1.0-1' }}%</td>
+          </ng-container>
+
+          <ng-container matColumnDef="onTimeRate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="onTimeRate">On-Time %</th>
+            <td mat-cell *matCellDef="let row">{{ row.onTimeRate | number: '1.0-1' }}%</td>
+          </ng-container>
+
+          <ng-container matColumnDef="overdueTasks">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="overdueTasks">Overdue</th>
+            <td mat-cell *matCellDef="let row">{{ row.overdueTasks }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="currentWorkloadPercent">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="currentWorkloadPercent">Workload</th>
+            <td mat-cell *matCellDef="let row">
+              <div class="workload-cell">
+                <span>{{ row.currentWorkloadPercent | number: '1.0-0' }}%</span>
+                <app-workload-chip [level]="row.currentWorkloadLevel" />
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="averageDelayDays">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="averageDelayDays">Avg Delay</th>
+            <td mat-cell *matCellDef="let row">{{ row.averageDelayDays | number: '1.0-1' }}d</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            [class.top-performer-row]="row.isTopPerformer"
+          ></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell empty-cell" [attr.colspan]="displayedColumns.length">
+              No engineer performance data for the current filters.
+            </td>
+          </tr>
+        </table>
+      </div>
+    }
+  </div>
+</section>

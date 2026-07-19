@@ -1,0 +1,175 @@
+<app-page-header
+  title="Engineers"
+  subtitle="Review capacity, performance, and assignment readiness across the engineering team."
+  eyebrow=""
+/>
+
+<section class="ds-toolbar engineers-toolbar">
+  <div class="ds-toolbar__search">
+    <app-search-box
+      [compact]="true"
+      placeholder="Search by name, email, or position..."
+      [initialValue]="searchTerm()"
+      (searchChange)="onSearchChange($event)"
+    />
+  </div>
+
+  <mat-form-field appearance="outline" class="ds-toolbar__filter ds-field-compact">
+    <mat-label>Capacity</mat-label>
+    <mat-select [value]="capacityFilter()" (selectionChange)="onCapacityFilterChange($event.value)">
+      @for (option of capacityFilterOptions; track option.value) {
+        <mat-option [value]="option.value">{{ option.label }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <div class="ds-toolbar__sort-group">
+    <mat-form-field appearance="outline" floatLabel="always" class="ds-toolbar__sort-field ds-field-compact">
+      <mat-label>Sort</mat-label>
+      <mat-select [value]="sortActive()" (selectionChange)="onSortFilterChange($event.value)">
+        @for (option of sortOptions; track option.field) {
+          <mat-option [value]="option.field">{{ option.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <button
+      mat-icon-button
+      type="button"
+      class="ds-toolbar__sort-direction"
+      [attr.aria-label]="sortDirection() === 'asc' ? 'Sort ascending' : 'Sort descending'"
+      [matTooltip]="sortDirection() === 'asc' ? 'Ascending' : 'Descending'"
+      (click)="onSortDirectionToggle()"
+    >
+      <mat-icon>{{ sortDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+    </button>
+  </div>
+</section>
+
+@if (isLoading()) {
+  <div class="loading-container ds-card">
+    <app-loading-spinner />
+  </div>
+} @else if (engineers().length === 0 && !hasActiveFilters()) {
+  <section class="empty-shell">
+    <app-empty-state
+      icon="engineering"
+      title="No engineers available"
+      message="No engineers are currently listed in the directory."
+    />
+  </section>
+} @else if (engineers().length === 0) {
+  <section class="empty-shell">
+    <app-no-results [query]="searchTerm()" />
+  </section>
+} @else if (isMobile()) {
+  <div class="card-grid" [class.is-refreshing]="isRefreshing()">
+    @for (engineer of engineers(); track trackByEngineerId($index, engineer)) {
+      <app-engineer-card [engineer]="engineer" mode="workload" (view)="viewEngineer($event)" />
+    }
+  </div>
+} @else {
+  <div class="table-shell" [class.is-refreshing]="isRefreshing()">
+    <div class="table-shell-header">
+      <div>
+        <p class="table-kicker">Directory</p>
+        <h2>Engineering capacity board</h2>
+      </div>
+      <span class="table-count">{{ totalCount() }} engineers</span>
+    </div>
+
+    <div class="table-container">
+      <table mat-table [dataSource]="engineers()">
+        <ng-container matColumnDef="engineer">
+          <th mat-header-cell *matHeaderCellDef>Engineer</th>
+          <td mat-cell *matCellDef="let engineer">
+            <div class="engineer-cell">
+              <span class="engineer-avatar" aria-hidden="true">{{ getInitials(engineer.engineerName) }}</span>
+              <div class="engineer-copy">
+                <span class="engineer-name">{{ engineer.engineerName }}</span>
+                <span class="engineer-position">{{ engineer.position }}</span>
+                <span class="engineer-email">{{ engineer.email }}</span>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="performance">
+          <th mat-header-cell *matHeaderCellDef>Performance</th>
+          <td mat-cell *matCellDef="let engineer">
+            <div class="metric-group">
+              <div class="metric-item">
+                <span class="metric-label">Projects</span>
+                <strong>{{ engineer.totalAssignedProjects }}</strong>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">Tasks</span>
+                <strong>{{ engineer.totalAssignedTasks }}</strong>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">Completed</span>
+                <strong>{{ engineer.completedTasks }}</strong>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">Average %</span>
+                <strong>{{ engineer.averageProgress | number: '1.0-0' }}%</strong>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="workload">
+          <th mat-header-cell *matHeaderCellDef>Workload</th>
+          <td mat-cell *matCellDef="let engineer">
+            <div class="workload-cell">
+              <div class="workload-bar-row">
+                <mat-progress-bar mode="determinate" [value]="workloadPercent(engineer)" />
+                <span>{{ engineer.activeTasks }} active</span>
+              </div>
+              <span class="workload-overdue" [class.is-overdue]="engineer.overdueTasks > 0">
+                {{ engineer.overdueTasks }} overdue
+              </span>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="availability">
+          <th mat-header-cell *matHeaderCellDef>Availability</th>
+          <td mat-cell *matCellDef="let engineer">
+            <app-workload-chip [level]="engineer.workloadLevel" [overdueTasks]="engineer.overdueTasks" />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="align-end">Actions</th>
+          <td mat-cell *matCellDef="let engineer" class="actions-cell">
+            <button
+              mat-icon-button
+              type="button"
+              class="ds-action-button row-action"
+              aria-label="View engineer"
+              matTooltip="View engineer"
+              (click)="viewEngineer(engineer)"
+            >
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+  </div>
+}
+
+@if (engineers().length > 0 || hasActiveFilters()) {
+  <mat-paginator
+    [length]="totalCount()"
+    [pageIndex]="pageIndex()"
+    [pageSize]="pageSize()"
+    [pageSizeOptions]="[5, 10, 25, 50]"
+    (page)="onPageChange($event)"
+    showFirstLastButtons
+  />
+}

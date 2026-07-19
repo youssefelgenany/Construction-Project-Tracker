@@ -1,0 +1,94 @@
+<section class="charts-block">
+  <div class="section-heading">
+    <p class="section-kicker">Project analytics</p>
+    <h2>Health & Progress</h2>
+  </div>
+
+  <div class="charts-grid">
+    <app-chart-card title="Project Health" subtitle="Mutually exclusive portfolio segments">
+      @if (healthLoading()) {
+        <div class="chart-loading"><app-loading-spinner /></div>
+      } @else {
+        <div class="chart-frame">
+          <canvas baseChart [data]="healthChartData" [options]="doughnutOptions" type="doughnut"></canvas>
+        </div>
+      }
+    </app-chart-card>
+
+    <app-chart-card title="Project Progress Timeline" subtitle="Average completion % by month">
+      @if (progressLoading()) {
+        <div class="chart-loading"><app-loading-spinner /></div>
+      } @else {
+        <div class="chart-frame">
+          <canvas baseChart [data]="progressChartData" [options]="lineOptions" type="line"></canvas>
+        </div>
+      }
+    </app-chart-card>
+  </div>
+</section>
+
+<section class="charts-block">
+  <div class="section-heading">
+    <p class="section-kicker">Capacity</p>
+    <h2>Workload Distribution</h2>
+  </div>
+
+  <app-chart-card title="Engineer Workload" subtitle="Sorted by workload %, with overdue task counts">
+    @if (workloadLoading()) {
+      <div class="chart-loading"><app-loading-spinner /></div>
+    } @else {
+      <div class="chart-frame chart-frame--tall">
+        <canvas baseChart [data]="workloadChartData" [options]="horizontalBarOptions" type="bar"></canvas>
+      </div>
+    }
+  </app-chart-card>
+</section>
+
+<section class="charts-block">
+  <div class="section-heading">
+    <p class="section-kicker">Task analytics</p>
+    <h2>Delivery Patterns</h2>
+  </div>
+
+  <div class="charts-grid charts-grid--four">
+    <app-chart-card title="Tasks by Priority">
+      @if (tasksLoading()) {
+        <div class="chart-loading"><app-loading-spinner /></div>
+      } @else {
+        <div class="chart-frame">
+          <canvas baseChart [data]="priorityChartData" [options]="doughnutOptions" type="doughnut"></canvas>
+        </div>
+      }
+    </app-chart-card>
+
+    <app-chart-card title="Tasks by Status">
+      @if (tasksLoading()) {
+        <div class="chart-loading"><app-loading-spinner /></div>
+      } @else {
+        <div class="chart-frame">
+          <canvas baseChart [data]="statusChartData" [options]="barOptions" type="bar"></canvas>
+        </div>
+      }
+    </app-chart-card>
+
+    <app-chart-card title="Overdue vs Completed">
+      @if (tasksLoading()) {
+        <div class="chart-loading"><app-loading-spinner /></div>
+      } @else {
+        <div class="chart-frame">
+          <canvas baseChart [data]="overdueChartData" [options]="barOptions" type="bar"></canvas>
+        </div>
+      }
+    </app-chart-card>
+
+    <app-chart-card title="Completion Trend">
+      @if (tasksLoading()) {
+        <div class="chart-loading"><app-loading-spinner /></div>
+      } @else {
+        <div class="chart-frame">
+          <canvas baseChart [data]="trendChartData" [options]="trendOptions" type="line"></canvas>
+        </div>
+      }
+    </app-chart-card>
+  </div>
+</section>

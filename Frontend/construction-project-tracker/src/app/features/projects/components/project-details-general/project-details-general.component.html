@@ -1,0 +1,71 @@
+@if (project(); as details) {
+  <div class="details-grid">
+    <mat-card class="details-card">
+      <mat-card-header>
+        <mat-card-title>Project Information</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <dl class="info-list">
+          <div>
+            <dt>Description</dt>
+            <dd>{{ details.description }}</dd>
+          </div>
+          <div>
+            <dt>Budget</dt>
+            <dd>{{ details.budget | currency }}</dd>
+          </div>
+          <div>
+            <dt>Start Date</dt>
+            <dd>{{ details.startDate | date: 'fullDate' }}</dd>
+          </div>
+          <div>
+            <dt>End Date</dt>
+            <dd>{{ details.endDate | date: 'fullDate' }}</dd>
+          </div>
+          <div>
+            <dt>Status</dt>
+            <dd><app-project-status-chip [status]="details.status" /></dd>
+          </div>
+          <div>
+            <dt>Progress</dt>
+            <dd class="progress-row">
+              <mat-progress-bar mode="determinate" [value]="details.progressPercentage"></mat-progress-bar>
+              <span>{{ details.progressPercentage }}%</span>
+            </dd>
+          </div>
+        </dl>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="details-card">
+      <mat-card-header>
+        <mat-card-title>Delivery Snapshot</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="stats-grid">
+          <article class="stat-item">
+            <div class="stat-icon-wrap" aria-hidden="true">
+              <mat-icon>engineering</mat-icon>
+            </div>
+            <strong class="stat-value">{{ details.assignedEngineersCount }}</strong>
+            <span class="stat-label">Assigned Engineers</span>
+          </article>
+          <article class="stat-item">
+            <div class="stat-icon-wrap" aria-hidden="true">
+              <mat-icon>assignment</mat-icon>
+            </div>
+            <strong class="stat-value">{{ details.tasksCount }}</strong>
+            <span class="stat-label">Tasks</span>
+          </article>
+          <article class="stat-item">
+            <div class="stat-icon-wrap" aria-hidden="true">
+              <mat-icon>folder</mat-icon>
+            </div>
+            <strong class="stat-value">{{ details.documentsCount }}</strong>
+            <span class="stat-label">Documents</span>
+          </article>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+}

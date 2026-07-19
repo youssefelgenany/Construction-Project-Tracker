@@ -1,0 +1,21 @@
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  margin-bottom: var(--ds-space-4);
+  padding: 0 var(--ds-space-2);
+  min-height: var(--ds-control-height);
+  color: var(--ds-color-text-secondary);
+  font-weight: var(--ds-font-weight-medium);
+
+  mat-icon {
+    font-size: 1.125rem;
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  &:hover {
+    color: var(--ds-color-primary);
+    background: var(--ds-color-primary-light);
+  }
+}
